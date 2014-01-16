@@ -224,6 +224,9 @@ CREATE TABLE `forum_forums`(
   FOREIGN KEY (`forum_access_group`) REFERENCES `forum_groups`(`group_id`)
 );
 
+INSERT INTO `forum_forums` (`forum_name`) VALUES
+  ('Welcome to the Cyni-Forums');
+
 CREATE TABLE `forum_categories`(
   `category_id` integer(11) not null auto_increment,
   `forum_id` integer(11) not null,
@@ -234,6 +237,9 @@ CREATE TABLE `forum_categories`(
   foreign key(`forum_id`) references forum_forums(`forum_id`),
   FOREIGN KEY (`category_access_group`) REFERENCES `forum_groups`(`group_id`)
 );
+
+INSERT INTO `forum_categories` (`forum_id`,`category_title`) VALUES
+  ('1','Hi!');
 
 CREATE TABLE `forum_threads`(
   `thread_id` integer(11) not null auto_increment,

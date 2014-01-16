@@ -17,9 +17,12 @@
  */
 
 define( "DATAHOST", "localhost" );
-define( "DATABASE", "" );
-define( "DATAUSER", "" );
+define( "DATABASE", "forum_testing" );
+define( "DATAUSER", "root" );
 define( "DATAPASS", "" );
-define( "DATAPFIX", "" );
+define( "DATAPFIX", "forum_" );
+
+$home_url = "http://localhost/forum/";
+$home_path = "/forum/";
 
 ?>
