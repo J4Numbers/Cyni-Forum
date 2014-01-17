@@ -119,6 +119,8 @@ class database {
 	 */
 	private function executeStatement( PDOStatement $statement ) {
 
+		var_dump($statement);
+
 		try {
 
 			$statement->execute();
@@ -183,6 +185,20 @@ class database {
 
 			$result = $this->executeStatement( $statement );
 			return $result->rowCount() > 0;
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function executeSimpleStatement( $sql ) {
+
+		try {
+
+			$this->executeStatement( $this->makePreparedStatement($sql) );
 
 		} catch (PDOException $ex) {
 

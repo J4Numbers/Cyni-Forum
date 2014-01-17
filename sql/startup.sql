@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2014 Matthew Ball (CyniCode/M477h3w1012)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-USE forum_testing;
+USE `forum_testing`;
 
 CREATE TABLE `forum_groups`(
-  `group_id` mediumint(11) not null auto_increment,
+  `group_id` integer(11) not null auto_increment,
   `group_name` varchar(64) not null,
   `group_color` varchar(6) not null,
   `group_info` text not null,
@@ -30,7 +30,7 @@ INSERT INTO `forum_groups` (`group_name`,`group_color`,group_info) VALUES
   ('Registered','5C5C5C','You.');
 
 CREATE TABLE `forum_permissions`(
-  `permission_id` mediumint(11) not null auto_increment,
+  `permission_id` integer(11) not null auto_increment,
   `permission_value` varchar(128) not null,
   primary key (`permission_id`)
 );
@@ -87,8 +87,8 @@ INSERT INTO `forum_status_permissions` (`status_id`,`permission_id`) VALUES
   ('3','23'),('3','24');
 
 CREATE TABLE `forum_group_permissions`(
-  `group_id` mediumint(11) not null,
-  `permission_id` mediumint(11) not null,
+  `group_id` integer(11) not null,
+  `permission_id` integer(11) not null,
   foreign key (`group_id`) REFERENCES `forum_groups`(`group_id`),
   foreign key (`permission_id`) REFERENCES `forum_permissions`(`permission_id`),
   UNIQUE KEY `group_permissions` (`group_id`,`permission_id`)
@@ -111,7 +111,7 @@ INSERT INTO `forum_group_permissions` (`group_id`,`permission_id`) VALUES
   ('3','1'),('3','2'),('3','3'),('3','4'),('3','5'),('3','6'),('3','7'),('3','8'),('3','9');
 
 CREATE TABLE `forum_ranks`(
-  `rank_id` mediumint(11) not null auto_increment,
+  `rank_id` integer(11) not null auto_increment,
   `rank_name` varchar(64) not null,
   `rank_color` varchar(6) not null,
   primary key(`rank_id`)
@@ -121,14 +121,14 @@ INSERT INTO `forum_ranks` (`rank_name`,`rank_color`) VALUES
   ('','000000');
 
 CREATE TABLE `forum_config`(
-  `config_id` mediumint(11) not null auto_increment,
+  `config_id` integer(11) not null auto_increment,
   `config_name` varchar(64) not null,
   `config_value` varchar(64) not null,
   primary key(`config_id`)
 );
 
 CREATE TABLE `forum_bbcode`(
-  `code_id` mediumint(11) not null auto_increment,
+  `code_id` integer(11) not null auto_increment,
   `code_rule` varchar(128) not null,
   `code_replacement` varchar(128) not null,
   primary key(`code_id`)
@@ -147,14 +147,14 @@ CREATE TABLE `forum_users`(
   `user_id` integer(11) not null auto_increment,
   `username` varchar(64) not null,
   `username_cased` varchar(64) not null,
-  `primary_group_id` mediumint(11) not null default '3',
-  `rank_id` mediumint(11) not null default '0',
+  `primary_group_id` integer(11) not null default '3',
+  `rank_id` integer(11) not null default '0',
   `user_email` varchar(128) not null,
   `password` varchar(40) not null,
   `time_reg` integer(11) not null,
   `time_pass_altered` integer(11) not null,
   `user_timezone` decimal(5,2) not null,
-  /*`user_rank` mediumint(8),*/
+  /*`user_rank` integer(8),*/
   `user_color` varchar(6),
   `user_avatar` varchar(255),
   primary key(`user_id`),
@@ -219,7 +219,7 @@ CREATE TABLE `forum_user_groups` (
 CREATE TABLE `forum_forums`(
   `forum_id` integer(11) not null  auto_increment,
   `forum_name` varchar(64) not null,
-  `forum_access_group` integer(11) default('3'),
+  `forum_access_group` integer(11) default '3',
   primary key(`forum_id`),
   FOREIGN KEY (`forum_access_group`) REFERENCES `forum_groups`(`group_id`)
 );
@@ -227,12 +227,28 @@ CREATE TABLE `forum_forums`(
 INSERT INTO `forum_forums` (`forum_name`) VALUES
   ('Welcome to the Cyni-Forums');
 
+CREATE TABLE `forum_forum_group_permissions`(
+  `forum_id` integer(11) not null,
+  `group_id` integer(11) not null,
+  `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
+  FOREIGN KEY (`forum_id`) REFERENCES `forum_forums`(`forum_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
+);
+
+CREATE TABLE `forum_forum_user_permissions`(
+  `forum_id` integer(11) not null,
+  `user_id` integer(11) not null,
+  `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
+  FOREIGN KEY (`forum_id`) REFERENCES `forum_forums`(`forum_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
+);
+
 CREATE TABLE `forum_categories`(
   `category_id` integer(11) not null auto_increment,
   `forum_id` integer(11) not null,
   `category_title` varchar(64) not null,
   `category_info` varchar(255),
-  `category_access_group` integer(11) default('3'),
+  `category_access_group` integer(11) default '3',
   primary key(`category_id`),
   foreign key(`forum_id`) references forum_forums(`forum_id`),
   FOREIGN KEY (`category_access_group`) REFERENCES `forum_groups`(`group_id`)
@@ -240,6 +256,22 @@ CREATE TABLE `forum_categories`(
 
 INSERT INTO `forum_categories` (`forum_id`,`category_title`) VALUES
   ('1','Hi!');
+
+CREATE TABLE `forum_cat_group_permissions`(
+  `category_id` integer(11) not null,
+  `group_id` integer(11) not null,
+  `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
+  FOREIGN KEY (`category_id`) REFERENCES `forum_categories`(`category_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
+);
+
+CREATE TABLE `forum_cat_user_permissions`(
+  `category_id` integer(11) not null,
+  `user_id` integer(11) not null,
+  `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
+  FOREIGN KEY (`category_id`) REFERENCES `forum_categories`(`category_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
+);
 
 CREATE TABLE `forum_threads`(
   `thread_id` integer(11) not null auto_increment,
@@ -253,6 +285,22 @@ CREATE TABLE `forum_threads`(
   foreign key(`user_id`) references forum_users(`user_id`),
   foreign key(`updated_by`) references forum_users(`user_id`),
   FOREIGN KEY (`thread_access_group`) REFERENCES `forum_groups`(`group_id`)
+);
+
+CREATE TABLE `forum_thread_group_permissions`(
+  `thread_id` integer(11) not null,
+  `group_id` integer(11) not null,
+  `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
+  FOREIGN KEY (`thread_id`) REFERENCES `forum_threads`(`thread_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
+);
+
+CREATE TABLE `forum_thread_user_permissions`(
+  `thread_id` integer(11) not null,
+  `user_id` integer(11) not null,
+  `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
+  FOREIGN KEY (`thread_id`) REFERENCES `forum_threads`(`thread_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
 );
 
 CREATE TABLE `forum_posts`(
