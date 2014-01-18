@@ -37,13 +37,14 @@ class pageTemplate {
 	 *
 	 * @param String $page_name : Get the contents of this file to build
 	 *  the page from.
+	 * @param String $dir : The root directory of files
 	 * @throws RuntimeException if the file does not exist
 	 */
-	public function __construct( $page_name ) {
-		$page = file_get_contents("../templates/$page_name");
+	public function __construct( $page_name, $dir ) {
+		$page = file_get_contents("$dir/templates/$page_name");
 		if ( $page === false )
 			throw new RuntimeException("This file does not exist");
-		$this->page = $page;
+		$this->raw_page = $page;
 	}
 
 	/**
@@ -59,7 +60,7 @@ class pageTemplate {
 		$page = file_get_contents("../templates/$newPage");
 		if ($page === false )
 			throw new RuntimeException("this file does not exist");
-		$this->page = $page;
+		$this->raw_page = $page;
 	}
 
 	/**
@@ -86,6 +87,9 @@ class pageTemplate {
 	 *  the end of it.
 	 */
 	public function appendTag($tag, $value) {
+		if ( !isset($this->tags[$tag]) )
+			$this->tags[$tag] = "";
+
 		$this->tags[$tag] .= $value;
 	}
 

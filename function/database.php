@@ -119,8 +119,6 @@ class database {
 	 */
 	private function executeStatement( PDOStatement $statement ) {
 
-		var_dump($statement);
-
 		try {
 
 			$statement->execute();
@@ -179,7 +177,7 @@ class database {
 
 		$table = $this->prefix . $tableName;
 
-		$statement->bindParam( ":table", $table );
+		$statement->bindParam( ":table", $tableName );
 
 		try {
 
@@ -210,35 +208,41 @@ class database {
 
 	public function getInstallStatus() {
 
-		if ($this->checkTableExists( "forum_bbcode" ) &&
-				$this->checkTableExists("forum_cat_group_permissions") &&
-				$this->checkTableExists("forum_cat_user_permissions") &&
-				$this->checkTableExists("forum_categories") &&
-				$this->checkTableExists("forum_config") &&
-				$this->checkTableExists("forum_forum_group_permissions") &&
-				$this->checkTableExists("forum_forum_user_permissions") &&
-				$this->checkTableExists("forum_forums") &&
-				$this->checkTableExists("forum_group_permissions") &&
-				$this->checkTableExists("forum_group_status") &&
-				$this->checkTableExists("forum_groups") &&
-				$this->checkTableExists("forum_permissions") &&
-				$this->checkTableExists("forum_posts") &&
-				$this->checkTableExists("forum_private_messages") &&
-				$this->checkTableExists("forum_private_messages_group_mailing_list") &&
-				$this->checkTableExists("forum_private_messages_user_mailing_list") &&
-				$this->checkTableExists("forum_ranks") &&
-				$this->checkTableExists("forum_status_permissions") &&
-				$this->checkTableExists("forum_thread_group_permissions") &&
-				$this->checkTableExists("forum_thread_user_permissions") &&
-				$this->checkTableExists("forum_threads") &&
-				$this->checkTableExists("forum_user_groups") &&
-				$this->checkTableExists("forum_user_meta") &&
-				$this->checkTableExists("forum_user_permissions") &&
-				$this->checkTableExists("forum_users") )
+		try {
+			if ($this->checkTableExists( "forum_bbcode" ) &&
+					$this->checkTableExists("forum_cat_group_permissions") &&
+					$this->checkTableExists("forum_cat_user_permissions") &&
+					$this->checkTableExists("forum_categories") &&
+					$this->checkTableExists("forum_config") &&
+					$this->checkTableExists("forum_forum_group_permissions") &&
+					$this->checkTableExists("forum_forum_user_permissions") &&
+					$this->checkTableExists("forum_forums") &&
+					$this->checkTableExists("forum_group_permissions") &&
+					$this->checkTableExists("forum_group_status") &&
+					$this->checkTableExists("forum_groups") &&
+					$this->checkTableExists("forum_permissions") &&
+					$this->checkTableExists("forum_posts") &&
+					$this->checkTableExists("forum_private_messages") &&
+					$this->checkTableExists("forum_private_messages_group_mailing_list") &&
+					$this->checkTableExists("forum_private_messages_user_mailing_list") &&
+					$this->checkTableExists("forum_ranks") &&
+					$this->checkTableExists("forum_status_permissions") &&
+					$this->checkTableExists("forum_thread_group_permissions") &&
+					$this->checkTableExists("forum_thread_user_permissions") &&
+					$this->checkTableExists("forum_threads") &&
+					$this->checkTableExists("forum_user_groups") &&
+					$this->checkTableExists("forum_user_meta") &&
+					$this->checkTableExists("forum_user_permissions") &&
+					$this->checkTableExists("forum_users") )
 
-			return true;
+				return true;
 
-		return false;
+			return false;
+
+		} catch (PDOException $ex) {
+			var_dump($ex);
+			return false;
+		}
 
 	}
 

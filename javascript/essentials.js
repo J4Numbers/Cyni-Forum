@@ -1,5 +1,3 @@
-<?php
-
 /**
  * Copyright 2014 Matthew Ball (CyniCode/M477h3w1012)
  *
@@ -16,14 +14,22 @@
  * limitations under the License.
  */
 
-require_once "$home_dir/function/database.php";
+function getHash(loc,d) {
 
-function isInstalled() {
+	var hashed;
 
-	$database = new database();
+	if (d)
+		$.post(loc+"/hash.php",
+			{hash: document.getElementById("user_log_pass").value,
+				date:true}).done( function(data){
+				hashed = data;
+			});
+	else
+		$.post(loc+"/hash.php",
+			{hash: document.getElementById("user_reg_pass").value}).done( function(data){
+				hashed = data;
+			});
 
-	return $database->getInstallStatus();
+	return hashed;
 
 }
-
-?>

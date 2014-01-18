@@ -20,13 +20,15 @@
 //fwrite( $handler, $data );
 //fclose( $handler );
 
-if ( file_exists("../config/props.php") )
-	header("Location: ../");
+//if ( file_exists("../config/props.php") )
+//	header("Location: ../");
 
-require_once "../function/page_generation.php";
-require_once "../function/function.php";
+$home_dir = getcwd()."/..";
 
-$pg = new pageTemplate( "installer.htm" );
+require_once "$home_dir/function/page_generation.php";
+require_once "$home_dir/function/function.php";
+
+$pg = new pageTemplate( "installer.htm", $home_dir );
 
 $menu = array();
 
@@ -39,11 +41,14 @@ else
 
 foreach ( $menu as $name => $link )
 	$pg->appendTag("MENU",
-		"<div class='menuItem'><a href='./$menu' class='menuLink' >$link</a></div>");
+		"<a href='./$link' class='menuItem menuLink' >$name</a>");
 
-$body = "Welcome to the CyniForum install/repair panel. Please select your relevant option in the headers above. Please note: If you are attempting to re-install the whole forums, you will need to provide your administrator username and password. For initial set-up, you will be providing one for yourself.";
+$body = "<div class='newsarticle_text'>Welcome to the CyniForum install/repair panel. Please select your relevant option in the headers above. Please note: If you are attempting to re-install the whole forums, you will need to provide your administrator username and password. For initial set-up, you will be providing one for yourself.</div>";
 
-$pg->setTag( "BODY", $body );
+$pg->setTag( "LOCATION", ".." );
+$pg->setTag( "TITLE", "Cyni Forums Installation" );
+$pg->setTag( "BODY", "<div class='newsarticle'>$body</div>" );
+$pg->setTag( "HEAD", "" );
 $pg->setTag( "FOOT", "" );
 
 $pg->showPage();

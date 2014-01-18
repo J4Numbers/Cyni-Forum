@@ -45,4 +45,5 @@ function hashPhrase( $pass, $d = false ) {
 
 	return $shah;
 }
+
 ?>
