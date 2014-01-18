@@ -14,16 +14,4 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-define( "DATAHOST", "localhost" );
-define( "DATABASE", "forum_testing" );
-define( "DATAUSER", "root" );
-define( "DATAPASS", "" );
-define( "DATAPFIX", "forum_" );
-define( "DATACONST", 52 );
-
-$home_url = "http://localhost/forum/";
-$home_path = "/forum/";
-
-?>
+ */ 

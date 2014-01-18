@@ -16,14 +16,9 @@
  * limitations under the License.
  */
 
-define( "DATAHOST", "localhost" );
-define( "DATABASE", "forum_testing" );
-define( "DATAUSER", "root" );
-define( "DATAPASS", "" );
-define( "DATAPFIX", "forum_" );
-define( "DATACONST", 52 );
-
-$home_url = "http://localhost/forum/";
-$home_path = "/forum/";
-
-?>
+//TODO: Check whether or not they are installing from anew
+//TODO: Get the initial information required to generate a configuration file
+// Database ( name, password, host, username ), Numerical constant for hashing,
+// Local URL, Global URL, their username & pass
+//TODO: Store that information in a props file that we make AFTER testing the SQL connection information they provide
+//TODO: Generate the database based on that information and hope it all goes to plan

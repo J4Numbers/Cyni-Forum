@@ -16,4 +16,15 @@
  * limitations under the License.
  */
 
+require_once "../config/props.php";
+require_once "database.php";
+
+function isInstalled() {
+
+	$database = new database();
+
+	return $database->getInstallStatus();
+
+}
+
 ?>
