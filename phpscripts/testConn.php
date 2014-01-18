@@ -16,21 +16,23 @@
  * limitations under the License.
  */
 
-require_once "$home_dir/function/database.php";
+if ( isset($_POST['host']) && isset($_POST['user']) &&
+		isset($_POST['pass']) && isset($_POST['name']) &&
+		isset($_POST['port']) ) {
 
-function isInstalled() {
+	$dsn = sprintf("mysql:dbname=%s;host=%s:%s;", $_POST['name'], $_POST['host'], $_POST['port']);
 
-	$database = new database();
+	try {
 
-	return $database->getInstallStatus();
+		$pdo_base = new PDO( $dsn, $_POST['user'], $_POST['pass'] );
+		echo "true";
+		$pdo_base = null;
+
+	} catch (PDOException $ex) {
+
+		error_log( "Could not connect to database: " . $ex->getMessage() );
+		die;
+
+	}
 
 }
-
-function getUserRegTime( $userName ) {
-
-	$database = new database();
-	return "";
-
-}
-
-?>

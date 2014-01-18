@@ -51,7 +51,7 @@ class database {
 		}
 
 		$this->pdo_base = $pdo_base;
-		$this->prefix = DATAPFIX;
+		$this->prefix = (defined(DATAPFIX))?DATAPFIX:"";
 
 	}
 
@@ -242,6 +242,27 @@ class database {
 		} catch (PDOException $ex) {
 			var_dump($ex);
 			return false;
+		}
+
+	}
+
+	public function getUserIdFromUserName( $userName ) {
+
+		$arrayOfVars = array( ":prefix" => $this->prefix,
+								":userName" => $userName );
+
+		$sql = "SELECT `userId` FROM `:prefixusers` WHERE (`username`=:userName)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
+
+			return $result['userId'];
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
 		}
 
 	}

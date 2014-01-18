@@ -16,21 +16,9 @@
  * limitations under the License.
  */
 
-require_once "$home_dir/function/database.php";
+$home_dir = getcwd() . "/..";
 
-function isInstalled() {
+require_once "$home_dir/function/function.php";
+require_once "$home_dir/function/hash.php";
 
-	$database = new database();
-
-	return $database->getInstallStatus();
-
-}
-
-function getUserRegTime( $userName ) {
-
-	$database = new database();
-	return "";
-
-}
-
-?>
+$time = (isset($_POST['d'])) ? getUserRegTime( $_POST['d'] ) : false;

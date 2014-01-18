@@ -115,3 +115,21 @@ body {
 	background-color: rgb(190,190,190);
 	font: 14px Veranda, sans-serif;
 }
+
+.table_of_things {
+	margin: 0 auto;
+	border: 1px #9B9B9B;
+}
+
+.buttons {
+	text-align: center;
+}
+
+.field_name {
+	font: 15px bold 'Arial Black', sans-serif;
+	color: #464646;
+}
+
+input.input {
+	width: 200px;
+}

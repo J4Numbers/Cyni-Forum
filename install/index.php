@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 
-//$handler = fopen( $name, 'w' );
-//fwrite( $handler, $data );
-//fclose( $handler );
-
 //if ( file_exists("../config/props.php") )
 //	header("Location: ../");
 

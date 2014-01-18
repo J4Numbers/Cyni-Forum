@@ -39,55 +39,74 @@ foreach ( $menu as $name => $link )
 $body1  = "<div class='newsarticle_header' ><h1>Installation</h1></div>";
 $body1 .= "<div class='newsarticle_text'>Welcome to the installation page. We're going to need a bit of information about you before we get started; please make sure you have it all to hand.</div>";
 
-$table = "<table>
+$table = "<table class='table_of_things' >
 			<tr>
 				<td class='field_name' >Database Host</td>
-				<td><input type='text' class='input' id='user_reg_host' placeholder='localhost' /></td>
+				<td><input type='text' class='input' onblur='checkDbHost(\"..\")' id='user_reg_db_host'
+					 placeholder='localhost' /></td>
+				<td id='reg_db_host_res' ></td>
+			</tr>
+			<tr>
+				<td class='field_name' >Database Port</td>
+				<td><input type='text' class='input' onblur='checkDbPort(\"..\")' id='user_reg_db_port'
+					 placeholder='3306'
+				 /></td>
+				<td id='reg_db_port_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Database User</td>
-				<td><input type='text' class='input' id='user_reg_db_user' placeholder='root' /></td>
+				<td><input type='text' class='input' onblur='checkDbUser(\"..\")' id='user_reg_db_user'
+					 placeholder='root' /></td>
+				<td id='reg_db_user_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Database Password</td>
-				<td><input type='password' class='input' id='user_reg_db_pass' placeholder='********' /></td>
+				<td><input type='password' class='input' onblur='checkDbPass(\"..\")' id='user_reg_db_pass'
+					 placeholder='********' /></td>
+				<td id='reg_db_pass_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Database Name</td>
-				<td><input type='text' class='input' id='user_reg_db_name' placeholder='CyniForum' /></td>
+				<td><input type='text' class='input' onblur='checkDbName(\"..\")' id='user_reg_db_name'
+					 placeholder='CyniForum' /></td>
+				<td id='reg_db_name_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Database Prefix</td>
-				<td><input type='text' class='input' id='user_reg_db_prefix' placeholder='forum_' /></td>
+				<td><input type='text' class='input' onblur='checkDbPref(\"..\")' id='user_reg_db_prefix'
+					 placeholder='forum_' /></td>
+				<td id='reg_db_prefix_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Domain Name</td>
-				<td><input type='text' class='input' id='user_reg_domain' placeholder='http://www.example.com' /></td>
+				<td><input type='text' class='input' onblur='checkDomain(\"..\")' id='user_reg_domain'
+					 placeholder='http://www.example.com' /></td>
+				<td id='reg_domain_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Install Location</td>
-				<td><input type='text' class='input' id='user_reg_inst_loc' placeholder='http://www.example.com/forum/' /></td>
+				<td><input type='text' class='input' onblur='checkInstLoc(\"..\")' id='user_reg_inst_loc'
+					 placeholder='http://www.example.com/forum/' /></td>
+				<td id='reg_inst_loc_res' ></td>
 			</tr>
 			<tr>
 				<td class='field_name' >Numeric Constant</td>
-				<td><input type='text' class='input' id='user_reg_num_const' placeholder='52' /></td>
+				<td><input type='text' class='input' onblur='checkConstant(\"..\")' id='user_reg_num_const'
+					 placeholder='52' /></td>
+				<td id='reg_num_const_res' ></td>
+			</tr>
+			<tr>
+				<td class='buttons' id='conn_result' ></td>
+				<td class='buttons' >
+					<button onclick='testConn(\"..\")' class='button' >Test Connection</button>
+					<button onclick='submitConnData(\"..\")' class='button' >Submit</button>
+				</td>
 			</tr>
 		</table>";
 
 $body2  = "<div class='newsarticle_header' ><h1>Information</h1></div>";
 $body2 .= "<div class='newsarticle_text'>$table</div>";
 
-/*
-define( "DATAHOST", "localhost" );
-define( "DATABASE", "forum_testing" );
-define( "DATAUSER", "root" );
-define( "DATAPASS", "" );
-define( "DATAPFIX", "forum_" );
-define( "DATACONST", 52 );
-
-$home_url = "http://localhost/forum/";
-$home_path = "/forum/";
- */
 
 //TODO: Get the initial information required to generate a configuration file
 // Database ( name, password, host, username ), Numerical constant for hashing,
