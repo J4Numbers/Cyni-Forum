@@ -33,9 +33,9 @@ class database {
 	private $pdo_base;
 	private $prefix;
 	
-	function __construct() {
+	function __construct( $home_dir ) {
 
-		require_once( "../config/props.php" );
+		require_once( "$home_dir/config/props.php" );
 		
 		$dsn = "mysql:dbname=".DATABASE.";host=".DATAHOST.";";
 

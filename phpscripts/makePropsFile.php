@@ -22,9 +22,9 @@ if ( isset($_POST['host']) && isset($_POST['port']) && isset($_POST['user']) &&
 
 	$file = "../config/props.php";
 
-	if ( file_get_contents($file)===true ) die("file exists error");
+	if ( file_exists($file) ) die("file exists error");
 
-	$filer = fopen( $file, "w" );
+	$filer = fopen( $file, "w+" );
 
 	if ( $filer === false )
 		die("perm error");

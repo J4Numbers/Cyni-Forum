@@ -19,16 +19,18 @@
 $home_dir = getcwd()."/..";
 
 require_once "$home_dir/function/page_generation.php";
-require_once "$home_dir/function/function.php";
+
+if ( file_exists("../config/props.php" ) ) {
+	require_once "$home_dir/function/function.php";
+	if (isInstalled($home_dir))
+		header("Location: index.php");
+}
 
 $pg = new pageTemplate( "installer.htm", $home_dir );
 
 $menu = array();
 
 $menu["Index"] = "index.php";
-
-//if (isInstalled())
-//	header("Location: index.php");
 
 $menu["Install"] = "#";
 
@@ -106,13 +108,6 @@ $table = "<table class='table_of_things' >
 
 $body2  = "<div class='newsarticle_header' ><h1>Information</h1></div>";
 $body2 .= "<div class='newsarticle_text'>$table</div>";
-
-
-//TODO: Get the initial information required to generate a configuration file
-// Database ( name, password, host, username ), Numerical constant for hashing,
-// Local URL, Global URL, their username & pass
-
-//TODO: Store that information in a props file that we make AFTER testing the SQL connection information they provide
 
 //TODO: Generate the database based on that information and hope it all goes to plan
 

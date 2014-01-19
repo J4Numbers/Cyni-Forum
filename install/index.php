@@ -30,7 +30,7 @@ $menu = array();
 
 $menu["Index"] = "#";
 
-if (!isInstalled())
+if (!isInstalled($home_dir))
 	$menu["Install/Repair"] = "install.php";
 else
 	$menu["Re-install"] = "reinstall.php";

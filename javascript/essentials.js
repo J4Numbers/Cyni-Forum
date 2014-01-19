@@ -42,6 +42,59 @@ function getHash(loc,d) {
 
 }
 
+function overlay() {
+	var overlay = $( '#overlay' );
+	var overlayContents = $( '#overlay_contents' );
+	overlay.show( );
+	overlayContents.show();
+	overlayContents.css( 'top', '60%' );
+	overlayContents.css( 'opacity', '0' );
+	overlayContents.animate(
+		{
+			'top': '50%',
+			'opacity': '1'
+		}, 300 );
+}
+
+function remOverlay() {
+	var overlay = $( '#overlay' );
+	var overlayContents = $( '#overlay_contents' );
+	overlay.hide( );
+	overlayContents.animate(
+		{
+			'top': '60%',
+			'opacity': '0'
+		}, 300, function( ) { overlayContents.hide( ); } );
+}
+
+function fileGenSuccess( loc ) {
+
+	console.log("Generation success");
+
+	var overText = document.getElementById("overlay_contents");
+	overText.innerHTML  = "<span id='overlay_text' >We're generating the database now...<br /></span>";
+	overText.innerHTML += "<img src='"+loc+"/images/ajax-loader.gif' />";
+	overlay();
+
+	console.log("Posting values...");
+
+	$.post(loc+"/phpscripts/generation.php")
+		.done(function(data){
+
+			console.log( "generation result: " + data );
+			if ( data == "successful" ) {
+				location.replace("user_info.php");
+			} else if ( data == "no file found" ) {
+				alert( "No file found!" );
+			} else if ( data == "no sql found" ) {
+				alert( "No SQL file found!" );
+			} else if ( data == "sql error" ) {
+				alert( "SQL error!" );
+			}
+
+		});
+}
+
 function submitConnData(loc) {
 
 	testConn(loc, function(data){
@@ -65,9 +118,10 @@ function submitConnData(loc) {
 					constant: document.getElementById("user_reg_num_const").value
 				}).done(function(data){
 
+					console.log( "Properties data return: " + data );
+
 					if ( data=="successful" ) {
-						alert( "Woot!" );
-						//location.replace = "generation.php";
+						fileGenSuccess(loc);
 					} else if ( data=="perm error" ) {
 						alert( "Damn... hoped this wouldn't happen" );
 					} else if ( data=="data error" ) {
@@ -174,7 +228,7 @@ function checkDbPref(loc) {
 function checkDomain(loc) {
 
 	var domain = document.getElementById("user_reg_domain").value;
-	var reg = new RegExp("https?:\/\/[[a-zA-Z0-9\.\/_]+[.]{1}[a-z]{2,5}\/?]|localhost\/?");
+	var reg = new RegExp("https?:\/\/([a-zA-Z0-9\.\/_]+[.]{1}[a-z]{2,5}\/?)|localhost\/?");
 
 	var acc = ( reg.test(domain) );
 
@@ -189,7 +243,7 @@ function checkDomain(loc) {
 function checkInstLoc(loc) {
 
 	var install = document.getElementById("user_reg_inst_loc").value;
-	var reg = new RegExp("https?:\/\/[[a-zA-Z0-9\.\/_]+[.]{1}[a-z]{2,5}]|localhost(\/\w*)*");
+	var reg = new RegExp("https?:\/\/([a-zA-Z0-9\.\/_]+[.]{1}[a-z]{2,5})|localhost(\/\w*)*");
 
 	var acc = ( reg.test(install) );
 

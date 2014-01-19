@@ -14,23 +14,4 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-require_once "$home_dir/function/database.php";
-
-function isInstalled( $home_dir ) {
-
-	$database = new database($home_dir);
-
-	return $database->getInstallStatus();
-
-}
-
-function getUserRegTime( $userName, $home_dir ) {
-
-	$database = new database($home_dir);
-	return "";
-
-}
-
-?>
+ */ 

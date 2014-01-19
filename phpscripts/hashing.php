@@ -21,4 +21,4 @@ $home_dir = getcwd() . "/..";
 require_once "$home_dir/function/function.php";
 require_once "$home_dir/function/hash.php";
 
-$time = (isset($_POST['d'])) ? getUserRegTime( $_POST['d'] ) : false;
+$time = (isset($_POST['d'])) ? getUserRegTime( $_POST['d'], $home_dir ) : false;
