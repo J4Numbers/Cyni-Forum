@@ -7,5 +7,5 @@ define( "DATABASE", "forum_testing" );
 define( "DATAPFIX", "forum_" );
 define( "DATACONST", "86" );
 
-$home_dir = "http://localhost/forum/";
+$inst_loc = "http://localhost/forum/";
 $domain = "http://localhost/";

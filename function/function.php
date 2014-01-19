@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+$home_dir = getcwd()."/..";
+
 require_once "$home_dir/function/database.php";
 
 function isInstalled( $home_dir ) {

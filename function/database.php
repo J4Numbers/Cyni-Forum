@@ -35,6 +35,9 @@ class database {
 	
 	function __construct( $home_dir ) {
 
+		if ( !file_exists("$home_dir/config/props.php"))
+			return;
+
 		require_once( "$home_dir/config/props.php" );
 		
 		$dsn = "mysql:dbname=".DATABASE.";host=".DATAHOST.";";

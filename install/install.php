@@ -109,8 +109,6 @@ $table = "<table class='table_of_things' >
 $body2  = "<div class='newsarticle_header' ><h1>Information</h1></div>";
 $body2 .= "<div class='newsarticle_text'>$table</div>";
 
-//TODO: Generate the database based on that information and hope it all goes to plan
-
 $pg->setTag("HEAD", "<img src='../images/forum_logo.png' class='logo' />");
 $pg->setTag("LOCATION", "..");
 $pg->setTag("TITLE", "Installation");
