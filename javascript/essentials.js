@@ -44,41 +44,46 @@ function getHash(loc,d) {
 
 function submitConnData(loc) {
 
-	var conn = testConn(loc);
+	testConn(loc, function(data){
 
-	console.log( "connection: " + conn );
+		console.log("callback: "+data);
 
-	if (conn) console.log("First Success");if ( filledIn(loc)) {
+		if ( data && filledIn(loc) ) {
 
-		$.post(loc+"/phpscripts/makePropsFile.php",
-			{
-				host: document.getElementById("user_reg_db_host").value,
-				port: document.getElementById("user_reg_db_port").value,
-				user: document.getElementById("user_reg_db_user").value,
-				pass: document.getElementById("user_reg_db_pass").value,
-				name: document.getElementById("user_reg_db_name").value,
-				prefix: document.getElementById("user_reg_db_prefix").value,
-				domain: document.getElementById("user_reg_domain").value,
-				instLoc: document.getElementById("user_reg_inst_loc").value,
-				constant: document.getElementById("user_reg_num_const").value
-			}).done(function(data){
+			console.log( "Success!" );
 
-				if ( data=="successful" ) {
-					alert( "Woot!" );
-					//location.replace = "generation.php";
-				} else if ( data=="perm error" ) {
-					alert( "Damn... hoped this wouldn't happen" );
-				} else if ( data=="data error" ) {
-					alert( "Some important data was not sent" );
-				} else if ( data=="file exists error" ) {
-					alert( "The properties file is already there" );
-				}
+			$.post(loc+"/phpscripts/makePropsFile.php",
+				{
+					host: document.getElementById("user_reg_db_host").value,
+					port: document.getElementById("user_reg_db_port").value,
+					user: document.getElementById("user_reg_db_user").value,
+					pass: document.getElementById("user_reg_db_pass").value,
+					name: document.getElementById("user_reg_db_name").value,
+					prefix: document.getElementById("user_reg_db_prefix").value,
+					domain: document.getElementById("user_reg_domain").value,
+					instLoc: document.getElementById("user_reg_inst_loc").value,
+					constant: document.getElementById("user_reg_num_const").value
+				}).done(function(data){
 
-			});
+					if ( data=="successful" ) {
+						alert( "Woot!" );
+						//location.replace = "generation.php";
+					} else if ( data=="perm error" ) {
+						alert( "Damn... hoped this wouldn't happen" );
+					} else if ( data=="data error" ) {
+						alert( "Some important data was not sent" );
+					} else if ( data=="file exists error" ) {
+						alert( "The properties file is already there" );
+					}
 
-	} else {
-		alert("Please fill in all the fields");
-	}
+				});
+
+
+		} else {
+			alert("Please fill in all the fields");
+		}
+
+	});
 
 }
 
@@ -221,7 +226,7 @@ function filledIn(loc) {
 
 }
 
-function testConn(loc) {
+function testConn(loc, callback) {
 
 	$.post(loc+"/phpscripts/testConn.php",
 			{host: document.getElementById("user_reg_db_host").value,
@@ -235,7 +240,7 @@ function testConn(loc) {
 
 		console.log( "Test Connection: " + acc );
 
-		return acc;
+		callback( acc );
 
 	});
 

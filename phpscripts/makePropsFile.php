@@ -29,15 +29,16 @@ if ( isset($_POST['host']) && isset($_POST['port']) && isset($_POST['user']) &&
 	if ( $filer === false )
 		die("perm error");
 
-	fwrite( $filer, sprintf('define( "DATAHOST", "%s" );\n', $_POST['host']) );
-	fwrite( $filer, sprintf('define( "DATAPORT", "%d" );\n', $_POST['port']) );
-	fwrite( $filer, sprintf('define( "DATAUSER", "%s" );\n', $_POST['user']) );
-	fwrite( $filer, sprintf('define( "DATAPASS", "%s" );\n', $_POST['pass']) );
-	fwrite( $filer, sprintf('define( "DATABASE", "%s" );\n', $_POST['name']) );
-	fwrite( $filer, sprintf('define( "DATAPFIX", "%s" );\n', $_POST['prefix']) );
-	fwrite( $filer, sprintf('define( "DATACONST", "%d" );\n\n', $_POST['constant']) );
-	fwrite( $filer, sprintf('$home_dir = "$s";\n', $_POST['instLoc']) );
-	fwrite( $filer, sprintf('$domain = "$s";\n', $_POST['domain']) );
+	fwrite( $filer, '<?php'.PHP_EOL );
+	fwrite( $filer, sprintf('define( "DATAHOST", "%s" );'.PHP_EOL, $_POST['host']) );
+	fwrite( $filer, sprintf('define( "DATAPORT", "%d" );'.PHP_EOL, $_POST['port']) );
+	fwrite( $filer, sprintf('define( "DATAUSER", "%s" );'.PHP_EOL, $_POST['user']) );
+	fwrite( $filer, sprintf('define( "DATAPASS", "%s" );'.PHP_EOL, $_POST['pass']) );
+	fwrite( $filer, sprintf('define( "DATABASE", "%s" );'.PHP_EOL, $_POST['name']) );
+	fwrite( $filer, sprintf('define( "DATAPFIX", "%s" );'.PHP_EOL, $_POST['prefix']) );
+	fwrite( $filer, sprintf('define( "DATACONST", "%d" );'.PHP_EOL.PHP_EOL, $_POST['constant']) );
+	fwrite( $filer, sprintf('$home_dir = "%s";'.PHP_EOL, $_POST['instLoc']) );
+	fwrite( $filer, sprintf('$domain = "%s";'.PHP_EOL, $_POST['domain']) );
 
 	fclose( $filer );
 

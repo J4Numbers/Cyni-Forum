@@ -98,7 +98,7 @@ $table = "<table class='table_of_things' >
 			<tr>
 				<td class='buttons' id='conn_result' ></td>
 				<td class='buttons' >
-					<button onclick='testConn(\"..\")' class='button' >Test Connection</button>
+					<button onclick='testConn(\"..\",function(data){})' class='button' >Test Connection</button>
 					<button onclick='submitConnData(\"..\")' class='button' >Submit</button>
 				</td>
 			</tr>
