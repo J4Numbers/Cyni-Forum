@@ -10,7 +10,6 @@ require_once("../config/props.php");
 require_once("../function/database.php");
 
 $sql = file_get_contents( "../sql/startup.sql" );
-$sql = sprintf(str_replace('@','%1$s',$sql ),DATAPFIX);
 
 $database = new database(getcwd()."/..");
 

@@ -46,7 +46,7 @@ class database {
 
 			$pdo_base = new PDO( $dsn, DATAUSER, DATAPASS );
 			$this->pdo_base = $pdo_base;
-			$this->prefix = (defined(DATAPFIX))?DATAPFIX:"";
+			$this->prefix = DATAPFIX;
 
 		} catch (PDOException $ex) {
 
@@ -70,6 +70,7 @@ class database {
 
 		try {
 
+			$string = sprintf(str_replace('@','%1$s',$string ),$this->prefix);
 			return $this->pdo_base->prepare( $string );
 
 		} catch (PDOException $ex) {
@@ -175,9 +176,7 @@ class database {
 	 */
 	private function checkTableExists( $tableName ) {
 
-		$statement = $this->makePreparedStatement( "SHOW TABLES LIKE :table" );
-
-		$table = $this->prefix . $tableName;
+		$statement = $this->makePreparedStatement( "SHOW TABLES LIKE @:table" );
 
 		$statement->bindParam( ":table", $tableName );
 
@@ -185,6 +184,27 @@ class database {
 
 			$result = $this->executeStatement( $statement );
 			return $result->rowCount() > 0;
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function checkUsernameExists( $username ) {
+
+		$arrayOfVars = array( ":user" => $username );
+
+		$sql = "SELECT count(*) AS `total` FROM `@users` WHERE (`username`=:user)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
+			$row = $result->fetch();
+
+			return ( $row['total'] == 0 );
 
 		} catch (PDOException $ex) {
 
@@ -211,31 +231,31 @@ class database {
 	public function getInstallStatus() {
 
 		try {
-			if ($this->checkTableExists( "forum_bbcode" ) &&
-					$this->checkTableExists("forum_cat_group_permissions") &&
-					$this->checkTableExists("forum_cat_user_permissions") &&
-					$this->checkTableExists("forum_categories") &&
-					$this->checkTableExists("forum_config") &&
-					$this->checkTableExists("forum_forum_group_permissions") &&
-					$this->checkTableExists("forum_forum_user_permissions") &&
-					$this->checkTableExists("forum_forums") &&
+			if ($this->checkTableExists("bbcode" ) &&
+					$this->checkTableExists("cat_group_permissions") &&
+					$this->checkTableExists("cat_user_permissions") &&
+					$this->checkTableExists("categories") &&
+					$this->checkTableExists("config") &&
 					$this->checkTableExists("forum_group_permissions") &&
-					$this->checkTableExists("forum_group_status") &&
-					$this->checkTableExists("forum_groups") &&
-					$this->checkTableExists("forum_permissions") &&
-					$this->checkTableExists("forum_posts") &&
-					$this->checkTableExists("forum_private_messages") &&
-					$this->checkTableExists("forum_private_messages_group_mailing_list") &&
-					$this->checkTableExists("forum_private_messages_user_mailing_list") &&
-					$this->checkTableExists("forum_ranks") &&
-					$this->checkTableExists("forum_status_permissions") &&
-					$this->checkTableExists("forum_thread_group_permissions") &&
-					$this->checkTableExists("forum_thread_user_permissions") &&
-					$this->checkTableExists("forum_threads") &&
-					$this->checkTableExists("forum_user_groups") &&
-					$this->checkTableExists("forum_user_meta") &&
 					$this->checkTableExists("forum_user_permissions") &&
-					$this->checkTableExists("forum_users") )
+					$this->checkTableExists("forums") &&
+					$this->checkTableExists("group_permissions") &&
+					$this->checkTableExists("group_status") &&
+					$this->checkTableExists("groups") &&
+					$this->checkTableExists("permissions") &&
+					$this->checkTableExists("posts") &&
+					$this->checkTableExists("private_messages") &&
+					$this->checkTableExists("private_messages_group_mailing_list") &&
+					$this->checkTableExists("private_messages_user_mailing_list") &&
+					$this->checkTableExists("ranks") &&
+					$this->checkTableExists("status_permissions") &&
+					$this->checkTableExists("thread_group_permissions") &&
+					$this->checkTableExists("thread_user_permissions") &&
+					$this->checkTableExists("threads") &&
+					$this->checkTableExists("user_groups") &&
+					$this->checkTableExists("user_meta") &&
+					$this->checkTableExists("user_permissions") &&
+					$this->checkTableExists("users") )
 
 				return true;
 

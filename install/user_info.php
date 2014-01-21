@@ -35,7 +35,7 @@ $menu = array();
 
 $menu["Index"] = "index.php";
 
-$menu["Install"] = "#";
+$menu["Install"] = "user_info.php";
 
 foreach ( $menu as $name => $link )
 	$pg->appendTag("MENU",

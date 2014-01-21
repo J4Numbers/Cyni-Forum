@@ -109,6 +109,8 @@ function checkUniqueUsername( username, loc ) {
 
 		}).done( function(data){
 
+			console.log( data );
+
 			if ( data == "true" )
 				return true;
 			else if ( data == "err" )
