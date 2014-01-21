@@ -33,18 +33,20 @@ class database {
 	private $pdo_base;
 	private $prefix;
 	
-	function __construct( $home_dir ) {
+	public function __construct( $home_dir ) {
 
 		if ( !file_exists("$home_dir/config/props.php"))
-			return;
+			return false;
 
 		require_once( "$home_dir/config/props.php" );
-		
-		$dsn = "mysql:dbname=".DATABASE.";host=".DATAHOST.";";
+
+		$dsn = sprintf("mysql:dbname=%s;host=%s;",DATABASE, DATAHOST);
 
 		try {
 
 			$pdo_base = new PDO( $dsn, DATAUSER, DATAPASS );
+			$this->pdo_base = $pdo_base;
+			$this->prefix = (defined(DATAPFIX))?DATAPFIX:"";
 
 		} catch (PDOException $ex) {
 
@@ -52,9 +54,6 @@ class database {
 			die;
 
 		}
-
-		$this->pdo_base = $pdo_base;
-		$this->prefix = (defined(DATAPFIX))?DATAPFIX:"";
 
 	}
 
@@ -274,7 +273,7 @@ class database {
 	 * Destroy the database object in the, slightly suspect, documented
 	 * method on the PHP site...
 	 */
-	function __destruct() {
+	public function __destruct() {
 		$this->pdo_base = null;
 	}
 

@@ -24,7 +24,7 @@ function isInstalled( $home_dir ) {
 
 	$database = new database($home_dir);
 
-	return $database->getInstallStatus();
+	return ( file_exists("$home_dir/config/props.php") && $database->getInstallStatus() );
 
 }
 

@@ -85,14 +85,105 @@ function fileGenSuccess( loc ) {
 			if ( data == "successful" ) {
 				location.replace("user_info.php");
 			} else if ( data == "no file found" ) {
-				alert( "No file found!" );
+				alert( "No config file found!" );
+				remOverlay();
 			} else if ( data == "no sql found" ) {
 				alert( "No SQL file found!" );
+				remOverlay();
 			} else if ( data == "sql error" ) {
 				alert( "SQL error!" );
+				remOverlay();
+			} else {
+				alert( "Undefined error!" );
+				remOverlay();
 			}
 
 		});
+}
+
+function checkUniqueUsername( username, loc ) {
+
+	$.post( loc+"/phpscripts/checkUsernameUnique.php",{
+
+			username: username
+
+		}).done( function(data){
+
+			if ( data == "true" )
+				return true;
+			else if ( data == "err" )
+				alert("Problem");
+
+			return false;
+
+		});
+
+}
+
+function checkUsername(loc){
+
+	var username = document.getElementById("user_reg_user").value;
+
+	var acc = ( username.length > 3 && username.length < 21 && checkUniqueUsername( username, loc ) );
+
+	document.getElementById("reg_user_res").innerHTML = chooseIcon( acc, loc );
+
+	return acc;
+
+}
+
+function checkPass1(loc){
+
+	var password = document.getElementById("user_reg_pass1").value;
+
+	var acc = ( password.length > 4 );
+
+	document.getElementById("reg_pass1_res").innerHTML = chooseIcon( acc, loc );
+
+	return acc;
+
+}
+
+function checkPass2(loc){
+
+	var pass1 = document.getElementById("user_reg_pass1").value;
+	var pass2 = document.getElementById("user_reg_pass2").value;
+
+	var acc = ( checkPass1(loc) && (pass2==pass1) )
+
+	document.getElementById("reg_pass2_res").innerHTML = chooseIcon( acc, loc );
+
+	return acc;
+
+}
+
+function checkEmail(loc){
+
+	var check = new RegExp("([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})");
+	var email = document.getElementById("user_reg_email").value;
+
+	var acc = check.test(email);
+
+	document.getElementById("reg_email_res").innerHTML = chooseIcon( acc, loc );
+
+	return acc;
+
+}
+
+function checkTime(loc){
+
+	var time = document.getElementById("user_reg_time").value;
+
+	var acc = ( time != "N" );
+
+	document.getElementById("reg_time_res").innerHTML = chooseIcon( acc, loc );
+
+	return acc;
+
+}
+
+function submitAdminData(loc){
+
 }
 
 function submitConnData(loc) {

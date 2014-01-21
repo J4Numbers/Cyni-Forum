@@ -46,13 +46,13 @@ $body1 .= "<div class='newsarticle_text'>Congratulations! You have the bare-bone
 
 $table = "<table class='table_of_things' >
 			<tr>
-				<td class='field_name' >Username</td>
+				<td class='field_name' >Username (Between 4 and 20 characters)</td>
 				<td><input type='text' class='input' onblur='checkUsername(\"..\")' id='user_reg_user'
 					 placeholder='Username' /></td>
 				<td id='reg_user_res' ></td>
 			</tr>
 			<tr>
-				<td class='field_name' >Password</td>
+				<td class='field_name' >Password (Above 5 characters)</td>
 				<td><input type='password' class='input' onblur='checkPass1(\"..\")' id='user_reg_pass1'
 					 placeholder='********' /></td>
 				<td id='reg_pass1_res' ></td>
@@ -71,7 +71,7 @@ $table = "<table class='table_of_things' >
 			</tr>
 			<tr>
 				<td class='field_name' >Timezone</td>
-				<td><select id='user_reg_time' onblur='checkTime(\"..\")' >
+				<td><select id='user_reg_time' class='input' onblur='checkTime(\"..\")' >
 					<option value='N'>Choose</option>
 					<option value='-12.0'>(GMT -12:00) Eniwetok, Kwajalein</option>
 					<option value='-11.0'>(GMT -11:00) Midway Island, Samoa</option>
@@ -110,7 +110,7 @@ $table = "<table class='table_of_things' >
 			<tr>
 				<td class='buttons' id='fin_result' ></td>
 				<td class='buttons' >
-					<button onclick='submitConnData(\"..\")' class='button' >Submit</button>
+					<button onclick='submitAdminData(\"..\")' class='button' >Submit</button>
 				</td>
 			</tr>
 		</table>";

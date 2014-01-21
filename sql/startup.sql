@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-USE `forum_testing`;
-
-CREATE TABLE `forum_groups`(
+CREATE TABLE `@groups`(
   `group_id` integer(11) not null auto_increment,
   `group_name` varchar(64) not null,
   `group_color` varchar(6) not null,
@@ -24,18 +22,18 @@ CREATE TABLE `forum_groups`(
   primary key(`group_id`)
 );
 
-INSERT INTO `forum_groups` (`group_name`,`group_color`,group_info) VALUES
+INSERT INTO `@groups` (`group_name`,`group_color`,group_info) VALUES
   ('Administrators','FF0000','The people running the damn thing'),
   ('Moderators','0000FF','The people who clean up yo\' shit'),
   ('Registered','5C5C5C','You.');
 
-CREATE TABLE `forum_permissions`(
+CREATE TABLE `@permissions`(
   `permission_id` integer(11) not null auto_increment,
   `permission_value` varchar(128) not null,
   primary key (`permission_id`)
 );
 
-INSERT INTO `forum_permissions` (`permission_value`) VALUES
+INSERT INTO `@permissions` (`permission_value`) VALUES
   ('general.can_post_thread'),('general.can_post_reply'),('general.can_view'),
   ('general.can_quote'),('general.can_use_bbcode'),('general.can_post_polls'),
   ('general.can_link_images'),('general.can_use_links'),('general.can_report_posts'),
@@ -59,16 +57,16 @@ INSERT INTO `forum_permissions` (`permission_value`) VALUES
   ('admin.can_edit_mailer_settings'),('admin.can_view_admin_logs'),('admin.can_edit_post_settings'),
   ('admin.can_edit_thread_settings'),('admin.can_edit_signature_settings'),('admin.can_ban_user' /* 66 */ );
 
-CREATE TABLE `forum_group_status` (
+CREATE TABLE `@group_status` (
   `status_id` integer(11) NOT NULL AUTO_INCREMENT,
   `status_name` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`status_id`)
 );
 
-INSERT INTO `forum_group_status` (`status_name`) VALUES
+INSERT INTO `@group_status` (`status_name`) VALUES
   ('user'),('moderator'),('admin');
 
-CREATE TABLE `forum_status_permissions`(
+CREATE TABLE `@status_permissions`(
   `status_id` integer(11) not null,
   `permission_id` integer(11) not null,
   FOREIGN KEY (`status_id`) REFERENCES `forum_group_status`(`status_id`),
@@ -76,7 +74,7 @@ CREATE TABLE `forum_status_permissions`(
   UNIQUE KEY `status_permissions` (`status_id`,`permission_id`)
 );
 
-INSERT INTO `forum_status_permissions` (`status_id`,`permission_id`) VALUES
+INSERT INTO `@status_permissions` (`status_id`,`permission_id`) VALUES
   ('1','11'),('1','17'), ('1','18'),('1','19'),
   ('2','11'),('2','17'), ('2','18'),('2','19'),
   ('2','12'),('2','13'), ('2','14'),('2','15'),
@@ -86,7 +84,7 @@ INSERT INTO `forum_status_permissions` (`status_id`,`permission_id`) VALUES
   ('3','21'),('3','22'), ('3','10'),('3','16'),
   ('3','23'),('3','24');
 
-CREATE TABLE `forum_group_permissions`(
+CREATE TABLE `@group_permissions`(
   `group_id` integer(11) not null,
   `permission_id` integer(11) not null,
   foreign key (`group_id`) REFERENCES `forum_groups`(`group_id`),
@@ -94,7 +92,7 @@ CREATE TABLE `forum_group_permissions`(
   UNIQUE KEY `group_permissions` (`group_id`,`permission_id`)
 );
 
-INSERT INTO `forum_group_permissions` (`group_id`,`permission_id`) VALUES
+INSERT INTO `@group_permissions` (`group_id`,`permission_id`) VALUES
   ('1','1'),('1','2'),('1','3'),('1','4'),('1','5'),('1','6'),('1','7'),('1','8'),('1','9'),('1','10'),
   ('1','11'),('1','12'),('1','13'),('1','14'),('1','15'),('1','16'),('1','17'),('1','18'),('1','19'),('1','20'),
   ('1','21'),('1','22'),('1','23'),('1','24'),('1','25'),('1','26'),('1','27'),('1','28'),('1','29'),('1','30'),
@@ -110,31 +108,31 @@ INSERT INTO `forum_group_permissions` (`group_id`,`permission_id`) VALUES
 
   ('3','1'),('3','2'),('3','3'),('3','4'),('3','5'),('3','6'),('3','7'),('3','8'),('3','9');
 
-CREATE TABLE `forum_ranks`(
+CREATE TABLE `@ranks`(
   `rank_id` integer(11) not null auto_increment,
   `rank_name` varchar(64) not null,
   `rank_color` varchar(6) not null,
   primary key(`rank_id`)
 );
 
-INSERT INTO `forum_ranks` (`rank_name`,`rank_color`) VALUES
+INSERT INTO `@ranks` (`rank_name`,`rank_color`) VALUES
   ('','000000');
 
-CREATE TABLE `forum_config`(
+CREATE TABLE `@config`(
   `config_id` integer(11) not null auto_increment,
   `config_name` varchar(64) not null,
   `config_value` varchar(64) not null,
   primary key(`config_id`)
 );
 
-CREATE TABLE `forum_bbcode`(
+CREATE TABLE `@bbcode`(
   `code_id` integer(11) not null auto_increment,
   `code_rule` varchar(128) not null,
   `code_replacement` varchar(128) not null,
   primary key(`code_id`)
 );
 
-INSERT INTO `forum_bbcode` (`code_rule`,`code_replacement`) VALUES
+INSERT INTO `@bbcode` (`code_rule`,`code_replacement`) VALUES
   ('/(.*)?\[b\](.*)\[/b\](.*)?/i','$1<strong>$2</strong>$3'),
   ('/(.*)?\[i\](.*)\[/i\](.*)?/i','$1<em>$2</em>$3'),
   ('/(.*)?\[u\](.*)\[/i\](.*)?/i','$1<u>$2</u>$3'),
@@ -143,7 +141,7 @@ INSERT INTO `forum_bbcode` (`code_rule`,`code_replacement`) VALUES
   ('/(.*)?\[url=(https?:\/\/[a-zA-Z0-9\.\/_]+[.]{1}[a-z]{2,5}[\/\w]*)\](.*)\[/url\](.*)/i',
    '$1<url href=\'$2\'>$3</url>$4');
 
-CREATE TABLE `forum_users`(
+CREATE TABLE `@users`(
   `user_id` integer(11) not null auto_increment,
   `username` varchar(64) not null,
   `username_cased` varchar(64) not null,
@@ -154,7 +152,6 @@ CREATE TABLE `forum_users`(
   `time_reg` integer(11) not null,
   `time_pass_altered` integer(11) not null,
   `user_timezone` decimal(5,2) not null,
-  /*`user_rank` integer(8),*/
   `user_color` varchar(6),
   `user_avatar` varchar(255),
   primary key(`user_id`),
@@ -162,14 +159,14 @@ CREATE TABLE `forum_users`(
   foreign key(`rank_id`) references forum_ranks(`rank_id`)
 );
 
-CREATE TABLE `forum_user_meta`(
+CREATE TABLE `@user_meta`(
   `user_id` integer(11) not null,
   `user_sig` TEXT default '',
   `user_bio` TEXT default '',
   FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
 );
 
-CREATE TABLE `forum_user_permissions`(
+CREATE TABLE `@user_permissions`(
   `user_id` integer(11) not null,
   `permission_id` integer(11) not null,
   `value` tinyint(1) not null default '1' comment '1 for true, 0 for false',
@@ -178,7 +175,7 @@ CREATE TABLE `forum_user_permissions`(
   UNIQUE KEY `user_permissions` (`user_id`,`permission_id`)
 );
 
-CREATE TABLE `forum_private_messages`(
+CREATE TABLE `@private_messages`(
   `priv_msg_id` integer(11) not null auto_increment,
   `sender_id` integer(11) not null,
   `receiver_id` integer(11) not null,
@@ -189,7 +186,7 @@ CREATE TABLE `forum_private_messages`(
   foreign key(`receiver_id`) references forum_users(`user_id`)
 );
 
-CREATE TABLE `forum_private_messages_user_mailing_list`(
+CREATE TABLE `@private_messages_user_mailing_list`(
   `priv_msg_id` integer(11) not null,
   `receiver_id` integer(11) not null,
   foreign key (`priv_msg_id`) references forum_private_messages(`priv_msg_id`),
@@ -197,7 +194,7 @@ CREATE TABLE `forum_private_messages_user_mailing_list`(
   constraint `unique_message_recip` unique (`priv_msg_id`,`receiver_id`)
 );
 
-CREATE TABLE `forum_private_messages_group_mailing_list`(
+CREATE TABLE `@private_messages_group_mailing_list`(
   `priv_msg_id` integer(11) not null,
   `group_id` integer(11) not null,
   foreign key (`priv_msg_id`) references forum_private_messages(`priv_msg_id`),
@@ -205,7 +202,7 @@ CREATE TABLE `forum_private_messages_group_mailing_list`(
   constraint `unique_message_group` unique (`priv_msg_id`,`group_id`)
 );
 
-CREATE TABLE `forum_user_groups` (
+CREATE TABLE `@user_groups` (
   `user_id` integer(11) NOT NULL,
   `group_id` integer(11) NOT NULL,
   `joined_on` integer(11) NOT NULL,
@@ -216,7 +213,7 @@ CREATE TABLE `forum_user_groups` (
   UNIQUE KEY `forum_user_groups` (`user_id`,`group_id`)
 );
 
-CREATE TABLE `forum_forums`(
+CREATE TABLE `@forums`(
   `forum_id` integer(11) not null  auto_increment,
   `forum_name` varchar(64) not null,
   `forum_access_group` integer(11) default '3',
@@ -224,10 +221,10 @@ CREATE TABLE `forum_forums`(
   FOREIGN KEY (`forum_access_group`) REFERENCES `forum_groups`(`group_id`)
 );
 
-INSERT INTO `forum_forums` (`forum_name`) VALUES
+INSERT INTO `@forums` (`forum_name`) VALUES
   ('Welcome to the Cyni-Forums');
 
-CREATE TABLE `forum_forum_group_permissions`(
+CREATE TABLE `@forum_group_permissions`(
   `forum_id` integer(11) not null,
   `group_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
@@ -235,7 +232,7 @@ CREATE TABLE `forum_forum_group_permissions`(
   FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
 );
 
-CREATE TABLE `forum_forum_user_permissions`(
+CREATE TABLE `@forum_user_permissions`(
   `forum_id` integer(11) not null,
   `user_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
@@ -243,7 +240,7 @@ CREATE TABLE `forum_forum_user_permissions`(
   FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
 );
 
-CREATE TABLE `forum_categories`(
+CREATE TABLE `@categories`(
   `category_id` integer(11) not null auto_increment,
   `forum_id` integer(11) not null,
   `category_title` varchar(64) not null,
@@ -254,10 +251,10 @@ CREATE TABLE `forum_categories`(
   FOREIGN KEY (`category_access_group`) REFERENCES `forum_groups`(`group_id`)
 );
 
-INSERT INTO `forum_categories` (`forum_id`,`category_title`) VALUES
+INSERT INTO `@categories` (`forum_id`,`category_title`) VALUES
   ('1','Hi!');
 
-CREATE TABLE `forum_cat_group_permissions`(
+CREATE TABLE `@cat_group_permissions`(
   `category_id` integer(11) not null,
   `group_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
@@ -265,7 +262,7 @@ CREATE TABLE `forum_cat_group_permissions`(
   FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
 );
 
-CREATE TABLE `forum_cat_user_permissions`(
+CREATE TABLE `@cat_user_permissions`(
   `category_id` integer(11) not null,
   `user_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
@@ -273,7 +270,7 @@ CREATE TABLE `forum_cat_user_permissions`(
   FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
 );
 
-CREATE TABLE `forum_threads`(
+CREATE TABLE `@threads`(
   `thread_id` integer(11) not null auto_increment,
   `user_id` integer(11) not null,
   `created_on` integer(11) not null,
@@ -287,7 +284,7 @@ CREATE TABLE `forum_threads`(
   FOREIGN KEY (`thread_access_group`) REFERENCES `forum_groups`(`group_id`)
 );
 
-CREATE TABLE `forum_thread_group_permissions`(
+CREATE TABLE `@thread_group_permissions`(
   `thread_id` integer(11) not null,
   `group_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
@@ -295,7 +292,7 @@ CREATE TABLE `forum_thread_group_permissions`(
   FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
 );
 
-CREATE TABLE `forum_thread_user_permissions`(
+CREATE TABLE `@thread_user_permissions`(
   `thread_id` integer(11) not null,
   `user_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
@@ -303,7 +300,7 @@ CREATE TABLE `forum_thread_user_permissions`(
   FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
 );
 
-CREATE TABLE `forum_posts`(
+CREATE TABLE `@posts`(
   `post_uid` bigint not null auto_increment,
   `thread_id` integer(11) not null,
   `user_id` integer(11) not null,
