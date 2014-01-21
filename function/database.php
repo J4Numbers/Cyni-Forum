@@ -176,13 +176,13 @@ class database {
 	 */
 	private function checkTableExists( $tableName ) {
 
-		$statement = $this->makePreparedStatement( "SHOW TABLES LIKE @:table" );
+		$arrayOfVars = array( ":table" => $this->prefix . $tableName );
 
-		$statement->bindParam( ":table", $tableName );
+		$sql = "SHOW TABLES LIKE :table";
 
 		try {
 
-			$result = $this->executeStatement( $statement );
+			$result = $this->executePreparedStatement( $this->makePreparedStatement($sql), $arrayOfVars );
 			return $result->rowCount() > 0;
 
 		} catch (PDOException $ex) {
