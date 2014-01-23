@@ -18,7 +18,7 @@
 
 require_once "../config/props.php";
 
-function hashPhrase( $pass, $d = false ) {
+function cyniHash( $pass, $d = false ) {
 
 	$t = (!$d) ? time() : $d;
 

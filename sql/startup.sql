@@ -69,8 +69,8 @@ INSERT INTO `@group_status` (`status_name`) VALUES
 CREATE TABLE `@status_permissions`(
   `status_id` integer(11) not null,
   `permission_id` integer(11) not null,
-  FOREIGN KEY (`status_id`) REFERENCES `forum_group_status`(`status_id`),
-  FOREIGN KEY (`permission_id`) REFERENCES `forum_permissions`(`permission_id`),
+  FOREIGN KEY (`status_id`) REFERENCES `@group_status`(`status_id`),
+  FOREIGN KEY (`permission_id`) REFERENCES `@permissions`(`permission_id`),
   UNIQUE KEY `status_permissions` (`status_id`,`permission_id`)
 );
 
@@ -87,8 +87,8 @@ INSERT INTO `@status_permissions` (`status_id`,`permission_id`) VALUES
 CREATE TABLE `@group_permissions`(
   `group_id` integer(11) not null,
   `permission_id` integer(11) not null,
-  foreign key (`group_id`) REFERENCES `forum_groups`(`group_id`),
-  foreign key (`permission_id`) REFERENCES `forum_permissions`(`permission_id`),
+  foreign key (`group_id`) REFERENCES `@groups`(`group_id`),
+  foreign key (`permission_id`) REFERENCES `@permissions`(`permission_id`),
   UNIQUE KEY `group_permissions` (`group_id`,`permission_id`)
 );
 
@@ -163,15 +163,15 @@ CREATE TABLE `@user_meta`(
   `user_id` integer(11) not null,
   `user_sig` TEXT default '',
   `user_bio` TEXT default '',
-  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
+  FOREIGN KEY (`user_id`) REFERENCES `@users`(`user_id`)
 );
 
 CREATE TABLE `@user_permissions`(
   `user_id` integer(11) not null,
   `permission_id` integer(11) not null,
   `value` tinyint(1) not null default '1' comment '1 for true, 0 for false',
-  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`),
-  FOREIGN KEY (`permission_id`) REFERENCES `forum_permissions`(`permission_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `@users`(`user_id`),
+  FOREIGN KEY (`permission_id`) REFERENCES `@permissions`(`permission_id`),
   UNIQUE KEY `user_permissions` (`user_id`,`permission_id`)
 );
 
@@ -207,9 +207,9 @@ CREATE TABLE `@user_groups` (
   `group_id` integer(11) NOT NULL,
   `joined_on` integer(11) NOT NULL,
   `status_id` INTEGER(11) NOT NULL,
-  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`),
-  FOREIGN KEY (`status_id`) REFERENCES `forum_group_status`(`status_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `@users`(`user_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `@groups`(`group_id`),
+  FOREIGN KEY (`status_id`) REFERENCES `@group_status`(`status_id`),
   UNIQUE KEY `forum_user_groups` (`user_id`,`group_id`)
 );
 
@@ -218,7 +218,7 @@ CREATE TABLE `@forums`(
   `forum_name` varchar(64) not null,
   `forum_access_group` integer(11) default '3',
   primary key(`forum_id`),
-  FOREIGN KEY (`forum_access_group`) REFERENCES `forum_groups`(`group_id`)
+  FOREIGN KEY (`forum_access_group`) REFERENCES `@groups`(`group_id`)
 );
 
 INSERT INTO `@forums` (`forum_name`) VALUES
@@ -228,16 +228,16 @@ CREATE TABLE `@forum_group_permissions`(
   `forum_id` integer(11) not null,
   `group_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
-  FOREIGN KEY (`forum_id`) REFERENCES `forum_forums`(`forum_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
+  FOREIGN KEY (`forum_id`) REFERENCES `@forums`(`forum_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `@groups`(`group_id`)
 );
 
 CREATE TABLE `@forum_user_permissions`(
   `forum_id` integer(11) not null,
   `user_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
-  FOREIGN KEY (`forum_id`) REFERENCES `forum_forums`(`forum_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
+  FOREIGN KEY (`forum_id`) REFERENCES `@forums`(`forum_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `@users`(`user_id`)
 );
 
 CREATE TABLE `@categories`(
@@ -248,7 +248,7 @@ CREATE TABLE `@categories`(
   `category_access_group` integer(11) default '3',
   primary key(`category_id`),
   foreign key(`forum_id`) references forum_forums(`forum_id`),
-  FOREIGN KEY (`category_access_group`) REFERENCES `forum_groups`(`group_id`)
+  FOREIGN KEY (`category_access_group`) REFERENCES `@groups`(`group_id`)
 );
 
 INSERT INTO `@categories` (`forum_id`,`category_title`) VALUES
@@ -258,16 +258,16 @@ CREATE TABLE `@cat_group_permissions`(
   `category_id` integer(11) not null,
   `group_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
-  FOREIGN KEY (`category_id`) REFERENCES `forum_categories`(`category_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
+  FOREIGN KEY (`category_id`) REFERENCES `@categories`(`category_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `@groups`(`group_id`)
 );
 
 CREATE TABLE `@cat_user_permissions`(
   `category_id` integer(11) not null,
   `user_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
-  FOREIGN KEY (`category_id`) REFERENCES `forum_categories`(`category_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
+  FOREIGN KEY (`category_id`) REFERENCES `@categories`(`category_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `@users`(`user_id`)
 );
 
 CREATE TABLE `@threads`(
@@ -281,23 +281,23 @@ CREATE TABLE `@threads`(
   primary key(`thread_id`),
   foreign key(`user_id`) references forum_users(`user_id`),
   foreign key(`updated_by`) references forum_users(`user_id`),
-  FOREIGN KEY (`thread_access_group`) REFERENCES `forum_groups`(`group_id`)
+  FOREIGN KEY (`thread_access_group`) REFERENCES `@groups`(`group_id`)
 );
 
 CREATE TABLE `@thread_group_permissions`(
   `thread_id` integer(11) not null,
   `group_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
-  FOREIGN KEY (`thread_id`) REFERENCES `forum_threads`(`thread_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `forum_groups`(`group_id`)
+  FOREIGN KEY (`thread_id`) REFERENCES `@threads`(`thread_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `@groups`(`group_id`)
 );
 
 CREATE TABLE `@thread_user_permissions`(
   `thread_id` integer(11) not null,
   `user_id` integer(11) not null,
   `code` tinyint(1) DEFAULT '1' COMMENT '1 is allowed, 0 is blocked',
-  FOREIGN KEY (`thread_id`) REFERENCES `forum_threads`(`thread_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `forum_users`(`user_id`)
+  FOREIGN KEY (`thread_id`) REFERENCES `@threads`(`thread_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `@users`(`user_id`)
 );
 
 CREATE TABLE `@posts`(

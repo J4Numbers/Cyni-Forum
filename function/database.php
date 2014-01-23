@@ -290,6 +290,76 @@ class database {
 	}
 
 	/**
+	 * Add a completely new user into our database so that we can do
+	 * all the wonderful things that we usually do with them.
+	 *
+	 * @param String $username : The username of the person we're adding in
+	 * @param String $password : This has already been hashed... remember that
+	 * @param String $email : The user's e-mail... to be checked via mail if set
+	 * @param int $timezone : The current timezone of the user
+	 * @param bool $admin_status : Whether the user is an administrator or not
+	 * @return bool
+	 * @throws PDOException : For if SQL doesn't like who we're adding
+	 */
+	public function insertNewUser( $username, $password, $email, $timezone, $admin_status=false ) {
+		if (!$this->checkUsernameExists($username)) {
+
+			$arrayOfVars = array( ":username" => $username,
+									":casedUsername" => strtolower($username),
+									":userEmail" => $email,
+									":userPass" => $password,
+									":times1" => time(),
+									":times2" => time(),
+									":timezone" => $timezone) ;
+
+			$sql = "INSERT INTO `@users` (`username`,`username_cased`,`user_email`,`password`,
+					`time_reg`,`time_pass_altered`,`user_timezone`) VALUES (:username,
+					:casedUsername,:userEmail,:userPass,:times1,:times2,:timezone)";
+
+			try {
+
+				$this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
+
+				if ($admin_status)
+					$this->insertExistingAdmin($this->pdo_base->lastInsertId());
+
+			} catch (PDOException $ex) {
+				throw $ex;
+			}
+		}
+	}
+
+	/**
+	 * A function to take the id of an existing user and to promote them into the
+	 * stardom that is the life of the administrator.
+	 *
+	 * @param int $userId : The ID of the user that is being put into admin status
+	 * @throws PDOException : If SQL doesn't like to do something at the current
+	 *  hour in the day
+	 */
+	public function insertExistingAdmin( $userId ) {
+
+		$arrayOfVars1 = array( ":userId"=>$userId,
+								":joined"=>time());
+		$arrayOfVars2 = array( ":userId"=>$userId);
+
+		$sql1 = "INSERT INTO `@user_groups` VALUES (`user_id`,`group_id`,`joined_on`,
+				`status_id`) VALUES (:userId,'1',:joined,'3') ON DUPLICATE KEY
+				UPDATE (`user_id`=`user_id`)";
+		$sql2 = "UPDATE `@users` SET `primary_group_id`='1' WHERE (`user_id`=:userId)";
+
+		try {
+
+			$this->executePreparedStatement($this->makePreparedStatement($sql1),$arrayOfVars1);
+			$this->executePreparedStatement($this->makePreparedStatement($sql2),$arrayOfVars2);
+
+		} catch (PDOException $ex) {
+			throw $ex;
+		}
+
+	}
+
+	/**
 	 * Destroy the database object in the, slightly suspect, documented
 	 * method on the PHP site...
 	 */

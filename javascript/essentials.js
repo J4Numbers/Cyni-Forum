@@ -22,19 +22,19 @@ function chooseIcon( accepted, loc ) {
 
 }
 
-function getHash(loc,d) {
+function getHash(loc,data,d) {
 
 	var hashed;
 
-	if (d)
+	if (d===true)
 		$.post(loc+"/phpscripts/hashing.php",
-			{hash: document.getElementById("user_log_pass").value,
-				name: document.getElementById("user_log_user").value}).done( function(data){
+			{hash: data,
+				name: d}).done( function(data){
 				hashed = data;
 			});
 	else
 		$.post(loc+"/phpscripts/hashing.php",
-			{hash: document.getElementById("user_reg_pass").value}).done( function(data){
+			{hash: data}).done( function(data){
 				hashed = data;
 			});
 
@@ -122,6 +122,13 @@ function checkUniqueUsername( username, loc ) {
 
 }
 
+function userFilledIn(loc) {
+
+	return ( checkUsername(loc) && checkPass2(loc) && checkEmail(loc) &&
+			checkTime(loc) );
+
+}
+
 function checkUsername(loc){
 
 	var username = document.getElementById("user_reg_user").value;
@@ -185,6 +192,34 @@ function checkTime(loc){
 }
 
 function submitAdminData(loc){
+
+	if ( userFilledIn(loc) ) {
+
+		console.log("Adding admin...");
+
+		$.post(loc+"/phpscripts/addUser.php", {
+				username: document.getElementById("user_reg_user").value,
+				password: getHash(loc,document.getElementById("user_reg_pass1").value),
+				email: document.getElementById("user_reg_email").value,
+				timezone: document.getElementById("user_reg_time").value,
+				admin: true
+			}).done(function(data){
+
+				console.log(data);
+
+				if (data=="success") {
+					location.replace = "installation_successful.php"
+				} else if (data=="No file found") {
+					alert("No properties file found!");
+				} else if (data=="No values found") {
+					alert("Nothing was posted!");
+				} else if (data=="sql error") {
+					alert("SQL error!");
+				}
+
+			});
+
+	}
 
 }
 

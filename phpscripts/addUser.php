@@ -16,11 +16,22 @@
  * limitations under the License.
  */
 
-$home_dir = getcwd() . "/..";
+if (!file_exists("../config/props.php"))
+	die("No file found");
 
-require_once "$home_dir/function/function.php";
-require_once "$home_dir/function/hash.php";
+if (!isset($_POST['username']))
+	die("No values found");
 
-$time = (isset($_POST['d'])) ? getUserRegTime( $_POST['d'], $home_dir ) : false;
+require_once ("../function/database.php");
 
-die( cyniHash($_POST['hash'], $time) );
+try {
+
+	$database = new database(getcwd()."/..");
+	$database->insertNewUser($_POST['username'],$_POST['password'],
+				$_POST['email'], $_POST['timezone'], $_POST['admin'] );
+
+	die("success");
+
+} catch (PDOException $ex) {
+	die("sql error");
+}
