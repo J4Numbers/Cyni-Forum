@@ -26,7 +26,7 @@ $home_dir = getcwd()."/..";
 require_once "../function/function.php";
 require_once "../function/page_generation.php";
 
-if (!isInstalled($home_dir))
+if (!isInstalled($home_dir) || usersExist($home_dir) )
 	header("Location: index.php");
 
 $pg = new pageTemplate( "installer.htm", $home_dir );

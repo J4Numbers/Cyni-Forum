@@ -16,19 +16,12 @@
  * limitations under the License.
  */
 
-require_once './function/function.php';
+$home_dir = getcwd();
+
+require_once "$home_dir/function/function.php";
+require_once "$home_dir/function/page_generation.php";
 
 session_start();
 
 if ( file_exists( "install/" ) )
-    header( "Location: install/" );
-
-#if ( !$_SESSION['is_registered'] ) {
-#	header("Location: ./login.php");
-#}
-
-
-
-
-
-?>
+	header( "Location: install/" );

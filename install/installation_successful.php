@@ -39,7 +39,7 @@ foreach ( $menu as $name => $link )
 	$pg->appendTag("MENU",
 		"<a href='./$link' class='menuItem menuLink' >$name</a>");
 
-$body = "<div class='newsarticle_text'>Congratulations! You have installed your copy of these forums. For any further support on the matter, please contact the creator at <a href='mailto:numbers@cynicode.co.uk>' >numbers@cynicode.co.uk</a>.</div>";
+$body = "<div class='newsarticle_text'>Congratulations! You have installed your copy of these forums. To complete the installation, please rename the install directory to something else to avoid unwary users finding their way in here. After you have done this, feel free to have a look around your new forums and configuration panel. For any further support on the matter, please contact the creator at <a href='mailto:numbers@cynicode.co.uk>' >numbers@cynicode.co.uk</a>.</div>";
 
 $pg->setTag( "LOCATION", ".." );
 $pg->setTag( "TITLE", "Installation Complete" );

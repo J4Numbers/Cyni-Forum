@@ -11,6 +11,7 @@ Stretch Goals
  - Installation (Current Stage)
  - User Registration and Customisation
  - Forum Retrieval and Viewing
+ - Administrator Configuration
  - Forum Posting and Editing
  - Category and Thread Editing
  - Permission Integration

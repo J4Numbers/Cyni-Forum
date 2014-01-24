@@ -30,16 +30,23 @@ $menu = array();
 
 $menu["Index"] = "#";
 
-if (!isInstalled($home_dir))
+if (!isInstalled($home_dir)) {
+
 	$menu["Install/Repair"] = "install.php";
-else
+	$body = "";
+
+} else {
+
 	$menu["Re-install"] = "reinstall.php";
+	$body = "<div class='newsarticle_text'>It seems that you've already installed the forums in this system. If you would like to reinstall, please click on the relevant button above, otherwise, please make sure that you have renamed the installation directory to something else.</div>";
+
+}
 
 foreach ( $menu as $name => $link )
 	$pg->appendTag("MENU",
 		"<a href='./$link' class='menuItem menuLink' >$name</a>");
 
-$body = "<div class='newsarticle_text'>Welcome to the CyniForum install/repair panel. Please select your relevant option in the headers above. Please note: If you are attempting to re-install the whole forums, you will need to provide your administrator username and password. For initial set-up, you will be providing one for yourself.</div>";
+$body .= "<div class='newsarticle_text'>Welcome to the CyniForum install/repair panel. Please select your relevant option in the headers above. Please note: If you are attempting to re-install the whole forums, you will need to provide your administrator username and password. For initial set-up, you will be providing one for yourself.</div>";
 
 $pg->setTag( "LOCATION", ".." );
 $pg->setTag( "TITLE", "Cyni Forums Installation" );

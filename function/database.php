@@ -228,6 +228,25 @@ class database {
 
 	}
 
+	public function getUsersInstalled() {
+
+		$sql = "SELECT COUNT(*) AS `total` FROM `@users`";
+
+		try {
+
+			$result = $this->executeStatement($this->makePreparedStatement($sql));
+			$row = $result->fetch();
+
+			return $row['total'] > 0;
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
 	public function getInstallStatus() {
 
 		try {

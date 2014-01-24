@@ -16,8 +16,6 @@
  * limitations under the License.
  */
 
-$home_dir = getcwd()."/..";
-
 require_once "$home_dir/function/database.php";
 
 function isInstalled( $home_dir ) {
@@ -26,6 +24,13 @@ function isInstalled( $home_dir ) {
 
 	return ( file_exists("$home_dir/config/props.php") && $database->getInstallStatus() );
 
+}
+
+function usersExist( $home_dir ) {
+
+	$database = new database($home_dir);
+
+	return ( file_exists("$home_dir/config/props.php") && $database->getUsersInstalled() );
 }
 
 function getUserRegTime( $userName, $home_dir ) {

@@ -29,6 +29,7 @@ try {
 	$database = new database(getcwd()."/..");
 	$database->insertNewUser($_POST['username'],$_POST['password'],
 				$_POST['email'], $_POST['timezone'], $_POST['admin'] );
+	$database->insertNewUser("Anonymous","","",$_POST['timezone']);
 
 	die("success");
 
