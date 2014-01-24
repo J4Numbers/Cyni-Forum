@@ -146,7 +146,7 @@ CREATE TABLE `@users`(
   `username` varchar(64) not null,
   `username_cased` varchar(64) not null,
   `primary_group_id` integer(11) not null default '3',
-  `rank_id` integer(11) not null default '0',
+  `rank_id` integer(11) not null default '1',
   `user_email` varchar(128) not null,
   `password` varchar(40) not null,
   `time_reg` integer(11) not null,

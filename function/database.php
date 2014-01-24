@@ -262,7 +262,6 @@ class database {
 			return false;
 
 		} catch (PDOException $ex) {
-			var_dump($ex);
 			return false;
 		}
 
@@ -302,7 +301,7 @@ class database {
 	 * @throws PDOException : For if SQL doesn't like who we're adding
 	 */
 	public function insertNewUser( $username, $password, $email, $timezone, $admin_status=false ) {
-		if (!$this->checkUsernameExists($username)) {
+		if ($this->checkUsernameExists($username)) {
 
 			$arrayOfVars = array( ":username" => $username,
 									":casedUsername" => strtolower($username),
@@ -315,13 +314,18 @@ class database {
 			$sql = "INSERT INTO `@users` (`username`,`username_cased`,`user_email`,`password`,
 					`time_reg`,`time_pass_altered`,`user_timezone`) VALUES (:username,
 					:casedUsername,:userEmail,:userPass,:times1,:times2,:timezone)";
+			$sql2 = "INSERT INTO `@user_meta` (`user_id`) VALUES (:userId)";
 
 			try {
 
-				$this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
+				$this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+
+				$lastId = $this->pdo_base->lastInsertId();
+				$arrayOfVars2 = array( ":userId" => $lastId );
+				$this->executePreparedStatement($this->makePreparedStatement($sql2),$arrayOfVars2);
 
 				if ($admin_status)
-					$this->insertExistingAdmin($this->pdo_base->lastInsertId());
+					$this->insertExistingAdmin($lastId);
 
 			} catch (PDOException $ex) {
 				throw $ex;
@@ -343,9 +347,9 @@ class database {
 								":joined"=>time());
 		$arrayOfVars2 = array( ":userId"=>$userId);
 
-		$sql1 = "INSERT INTO `@user_groups` VALUES (`user_id`,`group_id`,`joined_on`,
+		$sql1 = "INSERT INTO `@user_groups` (`user_id`,`group_id`,`joined_on`,
 				`status_id`) VALUES (:userId,'1',:joined,'3') ON DUPLICATE KEY
-				UPDATE (`user_id`=`user_id`)";
+				UPDATE `user_id`=`user_id`";
 		$sql2 = "UPDATE `@users` SET `primary_group_id`='1' WHERE (`user_id`=:userId)";
 
 		try {
