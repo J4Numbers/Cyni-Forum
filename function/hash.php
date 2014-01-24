@@ -16,8 +16,23 @@
  * limitations under the License.
  */
 
+if (!file_exists("../config/props.php"))
+	die("No file exists");
+
 require_once "../config/props.php";
 
+/**
+ * A function to take a plaintext password and return the hashed
+ * value of it. Please note... I may need to make something a
+ * little stronger than this...
+ *
+ * @param String $pass : The password that we're going to
+ *  hash into something else that is slightly harder to read
+ * @param int|bool $d : A variable to tell us whether we're
+ *  making a hash now, or one that was in the past
+ * @return string : The final hash that we've created from
+ *  the variables above
+ */
 function cyniHash( $pass, $d = false ) {
 
 	$t = (!$d) ? time() : $d;
