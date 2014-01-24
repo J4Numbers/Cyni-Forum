@@ -155,8 +155,8 @@ CREATE TABLE `@users`(
   `user_color` varchar(6),
   `user_avatar` varchar(255),
   primary key(`user_id`),
-  foreign key(`primary_group_id`) references forum_groups(`group_id`),
-  foreign key(`rank_id`) references forum_ranks(`rank_id`)
+  foreign key(`primary_group_id`) references `@groups`(`group_id`),
+  foreign key(`rank_id`) references `@ranks`(`rank_id`)
 );
 
 CREATE TABLE `@user_meta`(
@@ -182,23 +182,23 @@ CREATE TABLE `@private_messages`(
   `msg_contents` text not null,
   `msg_time` integer(11) not null,
   primary key(`priv_msg_id`),
-  foreign key(`sender_id`) references forum_users(`user_id`),
-  foreign key(`receiver_id`) references forum_users(`user_id`)
+  foreign key(`sender_id`) references `@users`(`user_id`),
+  foreign key(`receiver_id`) references `@users`(`user_id`)
 );
 
 CREATE TABLE `@private_messages_user_mailing_list`(
   `priv_msg_id` integer(11) not null,
   `receiver_id` integer(11) not null,
-  foreign key (`priv_msg_id`) references forum_private_messages(`priv_msg_id`),
-  foreign key (`receiver_id`) references forum_users(`user_id`),
+  foreign key (`priv_msg_id`) references `@private_messages`(`priv_msg_id`),
+  foreign key (`receiver_id`) references `@users`(`user_id`),
   constraint `unique_message_recip` unique (`priv_msg_id`,`receiver_id`)
 );
 
 CREATE TABLE `@private_messages_group_mailing_list`(
   `priv_msg_id` integer(11) not null,
   `group_id` integer(11) not null,
-  foreign key (`priv_msg_id`) references forum_private_messages(`priv_msg_id`),
-  foreign key (`group_id`) references forum_groups(`group_id`),
+  foreign key (`priv_msg_id`) references `@private_messages`(`priv_msg_id`),
+  foreign key (`group_id`) references `@groups`(`group_id`),
   constraint `unique_message_group` unique (`priv_msg_id`,`group_id`)
 );
 
@@ -247,7 +247,7 @@ CREATE TABLE `@categories`(
   `category_info` varchar(255),
   `category_access_group` integer(11) default '3',
   primary key(`category_id`),
-  foreign key(`forum_id`) references forum_forums(`forum_id`),
+  foreign key(`forum_id`) references `@forums`(`forum_id`),
   FOREIGN KEY (`category_access_group`) REFERENCES `@groups`(`group_id`)
 );
 
@@ -279,8 +279,8 @@ CREATE TABLE `@threads`(
   `updated_by` integer(11) not null,
   `thread_access_group` integer(11) default '3',
   primary key(`thread_id`),
-  foreign key(`user_id`) references forum_users(`user_id`),
-  foreign key(`updated_by`) references forum_users(`user_id`),
+  foreign key(`user_id`) references `@users`(`user_id`),
+  foreign key(`updated_by`) references `@users`(`user_id`),
   FOREIGN KEY (`thread_access_group`) REFERENCES `@groups`(`group_id`)
 );
 
@@ -307,6 +307,6 @@ CREATE TABLE `@posts`(
   `time_posted` integer(11) not null,
   `post_content` text not null,
   primary key(`post_uid`),
-  foreign key(`thread_id`) references forum_threads(`thread_id`),
-  foreign key(`user_id`) references forum_users(`user_id`)
+  foreign key(`thread_id`) references `@threads`(`thread_id`),
+  foreign key(`user_id`) references `@users`(`user_id`)
 );
