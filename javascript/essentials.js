@@ -120,6 +120,10 @@ function checkUniqueUsername( username, loc, callback ) {
 
 }
 
+function login() {
+
+}
+
 function userFilledIn(loc, callback) {
 
 	callback(false);

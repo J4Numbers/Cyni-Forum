@@ -33,11 +33,42 @@ function usersExist( $home_dir ) {
 	return ( file_exists("$home_dir/config/props.php") && $database->getUsersInstalled() );
 }
 
+function fetchSession($home_dir) {
+
+	require_once "$home_dir/config/props.php";
+
+	session_start();
+	return (isset($_SESSION[DOMAIN.'cyniForums']['user'])) ? $_SESSION[DOMAIN.'cyniForums']['user'] : false;
+
+}
+
+function getLoginStatus($home_dir) {
+
+	if ( !fetchSession($home_dir) ) {
+		$ret = sprintf("<table class='login_table' >
+					<tr>
+						<td class='log_field' >Username</td>
+						<td><input type='text' class='log_input' id='user_log_user' /></td>
+						<td rowspan='2'></td>
+					</tr>
+					<tr>
+						<td class='log_field' >Password</td>
+						<td><input type='text' class='log_input' id='user_log_pass' /></td>
+					</tr>
+					<tr><td colspan='2' >New? Why not <a href='%s/registration.php'>Register</a>?
+						<button onclick='login()'>Submit</button></td></tr></table>",INSTLOC);
+	} else {
+		$user = fetchSession($home_dir);
+		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user['name']);
+	}
+
+	return $ret;
+
+}
+
 function getUserRegTime( $userName, $home_dir ) {
 
 	$database = new database($home_dir);
 	return "";
 
 }
-
-?>

@@ -37,8 +37,8 @@ if ( isset($_POST['host']) && isset($_POST['port']) && isset($_POST['user']) &&
 	fwrite( $filer, sprintf('define( "DATABASE", "%s" );'.PHP_EOL, $_POST['name']) );
 	fwrite( $filer, sprintf('define( "DATAPFIX", "%s" );'.PHP_EOL, $_POST['prefix']) );
 	fwrite( $filer, sprintf('define( "DATACONST", "%d" );'.PHP_EOL.PHP_EOL, $_POST['constant']) );
-	fwrite( $filer, sprintf('$inst_loc = "%s";'.PHP_EOL, $_POST['instLoc']) );
-	fwrite( $filer, sprintf('$domain = "%s";'.PHP_EOL, $_POST['domain']) );
+	fwrite( $filer, sprintf('define( "INSTLOC", "%s" );'.PHP_EOL, $_POST['instLoc']) );
+	fwrite( $filer, sprintf('define( "DOMAIN", "%s" )'.PHP_EOL, $_POST['domain']) );
 
 	fclose( $filer );
 

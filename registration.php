@@ -16,20 +16,3 @@
  * limitations under the License.
  */
 
-$home_dir = getcwd();
-
-require_once "$home_dir/function/function.php";
-require_once "$home_dir/function/page_generation.php";
-
-if ( file_exists( "install/" ) )
-	header( "Location: install/" );
-
-$pg = new pageTemplate("rooting.htm", $home_dir);
-
-$pg->setTag("LOCATION", ".");
-$pg->setTag("TITLE", "Forums");
-$pg->SetTag("HEAD","");
-$pg->setTag("LOGINBOX", getLoginStatus($home_dir));
-$pg->setTag("FOOT","");
-
-$pg->showPage();
