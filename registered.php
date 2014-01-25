@@ -20,17 +20,13 @@ $home_dir = getcwd();
 
 require_once "$home_dir/function/page_generation.php";
 require_once "$home_dir/function/function.php";
-require_once "$home_dir/function/database.php";
 
-if ( isset($_POST['log_user']) && isset($_POST['log_pass']) )
-	attemptLogin( $_POST['log_user'], $_POST['log_pass'], $home_dir );
+$pg = new pageTemplate( "rooting.htm", $home_dir );
 
-$pg = new pageTemplate( "logging.htm", $home_dir );
-
-$body = "<div class='newsarticle_text'></div>";
+$body = "<div class='newsarticle_text'>Congratulations! You are now registered! You are now able to post in the forums and generally be a nice guy. Please remember to show respect to the admins and moderators!</div>";
 
 $pg->setTag( "LOCATION", "." );
-$pg->setTag( "TITLE", "Log In" );
+$pg->setTag( "TITLE", "Registration Complete" );
 $pg->setTag( "BODY", "<div class='newsarticle'>$body</div>" );
 $pg->setTag( "HEAD", "<img src='./images/forum_logo.png' class='logo' />" );
 $pg->setTag( "LOGINBOX", getLoginStatus($home_dir) );

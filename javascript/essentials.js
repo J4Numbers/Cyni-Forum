@@ -122,6 +122,12 @@ function checkUniqueUsername( username, loc, callback ) {
 
 function login() {
 
+	//user_log_user
+	//user_log_pass
+
+	var username = document.getElementById("user_log_user").value;
+	var password = document.getElementById("user_log_pass").value;
+
 }
 
 function userFilledIn(loc, callback) {
@@ -223,6 +229,70 @@ function checkTime(loc, callback){
 
 }
 
+function checkCaptcha(loc, callback){
+
+	var cap = document.getElementById("user_reg_cap").value;
+	var fruit = new RegExp("^fruit$", "i");
+	var acc = fruit.test(cap);
+
+	console.log( "Captcha: " + acc );
+
+	callback(acc);
+
+}
+
+function submitNewUserData(loc){
+
+	checkCaptcha(loc, function(data){
+
+		if (data==true) {
+			userFilledIn(loc, function(data){
+
+				console.log( "Callback: " + data );
+
+				if ( data==true) {
+
+					console.log("Adding User...");
+
+					getHash(loc,document.getElementById("user_reg_pass1").value, false, function(data){
+
+						console.log( "Hashed: " + data );
+
+						$.post(loc+"/phpscripts/addUser.php", {
+							username: document.getElementById("user_reg_user").value,
+							password: data,
+							email: document.getElementById("user_reg_email").value,
+							timezone: document.getElementById("user_reg_time").value
+						}).done(function(data){
+
+							console.log(data);
+
+							if (data=="success") {
+								location.replace("registered.php");
+							} else if (data=="No file found") {
+								alert("No properties file found!");
+							} else if (data=="No values found") {
+								alert("Nothing was posted!");
+							} else if (data=="sql error") {
+								alert("SQL error!");
+							}
+
+						});
+
+					});
+
+				}
+
+			});
+
+		} else {
+			alert("Your CAPTCHA failed. Are you sure you're not a bot?");
+		}
+
+	});
+
+}
+
 function submitAdminData(loc){
 
 	userFilledIn(loc,function(data){
@@ -242,7 +312,8 @@ function submitAdminData(loc){
 						password: data,
 						email: document.getElementById("user_reg_email").value,
 						timezone: document.getElementById("user_reg_time").value,
-						admin: true
+						admin: true,
+						first_install: true
 					}).done(function(data){
 
 						console.log(data);

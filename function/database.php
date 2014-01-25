@@ -286,18 +286,148 @@ class database {
 
 	}
 
+	public function getPasswordFromUsername( $username ) {
+
+		$arrayOfVars = array( ":userName" => $username );
+
+		$sql = "SELECT `password` FROM `@users` WHERE (`username`=:userName)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+
+			if ($result->rowCount()<1) return false;
+
+			$row = $result->fetch();
+
+			return $row['password'];
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function getPasswordTimeFromUsername( $username ) {
+
+		$arrayOfVars = array( ":userName" => $username );
+
+		$sql = "SELECT `time_pass_altered` FROM `@users` WHERE (`username`=:userName)";
+
+		try {
+
+			$result =$this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+
+			if ( $result->rowCount() < 1 )
+				return false;
+
+			$row = $result->fetch();
+
+			return $row['time_pass_altered'];
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function getJoinedGroups( $userId ) {
+
+		$arrayOfVars = array( ":userId" => $userId );
+
+		$sql = "SELECT `u_groups`.`group_id`,`group_name`,`group_color`,`group_info`,`joined_on`,`status_id` FROM `@user_groups` AS `u_groups` INNER JOIN `@groups` AS `groups` ON `u_groups`.`group_id`=`groups`.`group_id` WHERE (`u_groups`.`user_id`=:userId)";
+
+		try {
+
+			$result =$this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+
+			return $result->fetchAll();
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function getUserFromUserId( $userId ) {
+
+		$arrayOfVars = array( ":userId" => $userId );
+
+		$sql = "SELECT * FROM `@users` WHERE (`user_id`=:userId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+
+			if ($result->rowCount() < 1) return false;
+
+			return $result->fetch(PDO::FETCH_ASSOC);
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function getUserMetaFromId( $userId ) {
+
+		$arrayOfVars = array( ":userId" => $userId );
+
+		$sql = "SELECT * FROM `@user_meta` WHERE (`user_id`=:userId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+
+			if ( $result->rowCount() < 1 ) return false;
+
+			return $result->fetch(PDO::FETCH_ASSOC);
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		}
+
+	}
+
+	public function getCompleteUserInfoFromUsername( $username ) {
+
+		$userId = $this->getUserIdFromUserName($username);
+
+		$userArray = array();
+
+		array_push($userArray, $this->getJoinedGroups($userId));
+		array_push($userArray, $this->getUserFromUserId($userId));
+		array_push($userArray, $this->getUserMetaFromId($userId));
+
+		return $userArray;
+
+	}
+
 	public function getUserIdFromUserName( $userName ) {
 
-		$arrayOfVars = array( ":prefix" => $this->prefix,
-								":userName" => $userName );
+		$arrayOfVars = array( ":userName" => strtolower($userName) );
 
-		$sql = "SELECT `userId` FROM `:prefixusers` WHERE (`username`=:userName)";
+		$sql = "SELECT `user_id` FROM `@users` WHERE (`username_cased`=:userName)";
 
 		try {
 
 			$result = $this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
 
-			return $result['userId'];
+			if ( $result->rowCount() < 1 ) return false;
+
+			$row = $result->fetch();
+
+			return intval($row['user_id']);
 
 		} catch (PDOException $ex) {
 
@@ -334,14 +464,22 @@ class database {
 					`time_reg`,`time_pass_altered`,`user_timezone`) VALUES (:username,
 					:casedUsername,:userEmail,:userPass,:times1,:times2,:timezone)";
 			$sql2 = "INSERT INTO `@user_meta` (`user_id`) VALUES (:userId)";
+			$sql3 = "INSERT INTO `@user_groups` (`user_id`,`group_id`,`joined_on`,`status_id`)
+					VALUES (:userId,'3',:times,'1')";
 
 			try {
 
 				$this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
 
 				$lastId = $this->pdo_base->lastInsertId();
+
 				$arrayOfVars2 = array( ":userId" => $lastId );
+
+				$arrayOfVars3 = array( ":userId" => $lastId,
+										":joined_on" => time() );
+
 				$this->executePreparedStatement($this->makePreparedStatement($sql2),$arrayOfVars2);
+				$this->executePreparedStatement($this->makePreparedStatement($sql3),$arrayOfVars3);
 
 				if ($admin_status)
 					$this->insertExistingAdmin($lastId);
@@ -391,5 +529,3 @@ class database {
 	}
 
 }
-
-?>

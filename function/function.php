@@ -33,11 +33,27 @@ function usersExist( $home_dir ) {
 	return ( file_exists("$home_dir/config/props.php") && $database->getUsersInstalled() );
 }
 
+function checkSessionStarted() {
+	if (session_status() == PHP_SESSION_NONE)
+		session_start();
+}
+
+function createLoginSession( $username, $home_dir ) {
+
+	require_once "$home_dir/config/props.php";
+
+	checkSessionStarted();
+
+	$database = new database($home_dir);
+	$_SESSION[DOMAIN.'cyniForums']['user'] = $database->getCompleteUserInfoFromUsername($username);
+
+}
+
 function fetchSession($home_dir) {
 
 	require_once "$home_dir/config/props.php";
 
-	session_start();
+	checkSessionStarted();
 	return (isset($_SESSION[DOMAIN.'cyniForums']['user'])) ? $_SESSION[DOMAIN.'cyniForums']['user'] : false;
 
 }
@@ -45,30 +61,64 @@ function fetchSession($home_dir) {
 function getLoginStatus($home_dir) {
 
 	if ( !fetchSession($home_dir) ) {
-		$ret = sprintf("<table class='login_table' >
+		$ret = sprintf("<form method='post' action='%s/login.php' ><table class='login_table' >
 					<tr>
 						<td class='log_field' >Username</td>
-						<td><input type='text' class='log_input' id='user_log_user' /></td>
+						<td><input type='text' class='log_input' id='user_log_user' name='log_user' /></td>
 						<td rowspan='2'></td>
 					</tr>
 					<tr>
 						<td class='log_field' >Password</td>
-						<td><input type='text' class='log_input' id='user_log_pass' /></td>
+						<td><input type='password' class='log_input' id='user_log_pass' name='log_pass' /></td>
 					</tr>
 					<tr><td colspan='2' >New? Why not <a href='%s/registration.php'>Register</a>?
-						<button onclick='login()'>Submit</button></td></tr></table>",INSTLOC);
+						<input type='submit' name='Submit' /></td></tr></table></form>",INSTLOC,INSTLOC);
 	} else {
 		$user = fetchSession($home_dir);
-		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user['name']);
+		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user[1]['username']);
 	}
 
 	return $ret;
 
 }
 
+function attemptLogin( $username, $password, $home_dir ) {
+
+	$time = getUserRegTime($username, $home_dir);
+
+	if ( $time == false ) return false;
+
+	require_once "$home_dir/function/hash.php";
+
+	$hash = cyniHash($password, $time);
+
+	if ( compareHashedPasswordWithUsername($username, $hash, $home_dir) ) {
+
+		createLoginSession( $username, $home_dir );
+		header( "Location: index.php" );
+
+	} else {
+
+		return false;
+
+	}
+
+}
+
+function compareHashedPasswordWithUsername( $userName, $hashed, $home_dir ) {
+
+	$database = new database($home_dir);
+
+	$oriHash = $database->getPasswordFromUsername($userName);
+
+	return ( $hashed == $oriHash );
+
+}
+
 function getUserRegTime( $userName, $home_dir ) {
 
 	$database = new database($home_dir);
-	return "";
+
+	return $database->getPasswordTimeFromUsername($userName);
 
 }

@@ -150,6 +150,10 @@ img.logo {
 	font: 14px Veranda, sans-serif;
 }
 
+.heading{
+	width: 60%;
+}
+
 .table_of_things {
 	margin: 0 auto;
 	border: 1px #9B9B9B;
@@ -162,6 +166,10 @@ img.logo {
 .field_name {
 	font: 15px bold 'Arial Black', sans-serif;
 	color: #464646;
+}
+
+.hint {
+	font: 12px bold;
 }
 
 input.input {

@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-if (!file_exists("../config/props.php"))
+if (!file_exists("$home_dir/config/props.php"))
 	die("No file exists");
 
-require_once "../config/props.php";
+require_once "$home_dir/config/props.php";
 
 /**
  * A function to take a plaintext password and return the hashed
@@ -35,30 +35,65 @@ require_once "../config/props.php";
  */
 function cyniHash( $pass, $d = false ) {
 
-	$t = (!$d) ? time() : $d;
-
-	$string = str_split($pass);
-
+	$input = unistr_to_ords( $pass );
 	$i = 0;
-	foreach ($string as $gnirtr ) {
-		$orded = ord($gnirtr);
-		$asci[$i] = (int) $orded;
+
+	foreach ( $input as $started ) {
+		$move[$i] = (int) ord( $started );
 		$i++;
 	}
 
-	$shah = "";
-	$c = 1;
+	$start = (!$d) ? time() : $d;
+	$c = 2;
+	$id = DATACONST;
 
-	for ( $l=1;$l<41;$l++ ) {
-		$char = intval( ( ( $t / (int) $asci[$c] ) * $l ) * ( $t % DATACONST ) );
+	for ( $l=1; $l<=64; $l++ ) {
+		$char = intval( ( ($start * (($id/10)*3))/ $move[$c] ) * ( $l * (($id/3)*4) ) );
+		$char = ( $char * ((5*19*3)/63)*4);
 		$newchar = $char % 127;
-		if ( $newchar < 32 )
-			$newchar = $newchar + 32;
-		$shah .= chr( $newchar );
-		$c = ( $c * 2 ) % $l;
+		if ( $newchar < 0 ) {
+			$newchar = $newchar * (-1);
+		}
+		if ( $newchar <= 32 ) {
+			$newchar = $newchar + 33;
+		}
+		$shah[$l-1] = $newchar;
+		$c = ( ( $c * 2 ) / $l ) % strLen( $start );
+		$hca = $shah[$l-1];
+		//echo $hca ." : ". chr( $hca ) . "<br />";
 	}
 
-	return $shah;
+	$final = ords_to_unistr( $shah );
+
+	return $final;
 }
 
-?>
+function ords_to_unistr($ords, $encoding = 'UTF-8'){
+	// Turns an array of ordinal values into a string of unicode characters
+	$str = '';
+	for($i = 0; $i < sizeof($ords); $i++){
+		// Pack this number into a 4-byte string
+		// (Or multiple one-byte strings, depending on context.)
+		$v = $ords[$i];
+		$str .= pack("N",$v);
+	}
+	$str = mb_convert_encoding($str,$encoding,"UCS-4BE");
+	return($str);
+}
+
+function unistr_to_ords($str, $encoding = 'UTF-8'){
+	// Turns a string of unicode characters into an array of ordinal values,
+	// Even if some of those characters are multibyte.
+	$str = mb_convert_encoding($str,"UCS-4BE",$encoding);
+	$ords = array();
+
+	// Visit each unicode character
+	for($i = 0; $i < mb_strlen($str,"UCS-4BE"); $i++){
+		// Now we have 4 bytes. Find their total
+		// numeric value.
+		$s2 = mb_substr($str,$i,1,"UCS-4BE");
+		$val = unpack("N",$s2);
+		$ords[] = $val[1];
+	}
+	return($ords);
+}

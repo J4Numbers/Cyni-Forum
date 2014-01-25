@@ -16,4 +16,5 @@
  * limitations under the License.
  */
 
-?>
+session_start();
+session_destroy();
