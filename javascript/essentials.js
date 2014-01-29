@@ -258,9 +258,12 @@ function submitNewUserData(loc){
 
 						console.log( "Hashed: " + data );
 
+						var jsonHash = JSON.parse(data);
+						console.log(jsonHash);
+
 						$.post(loc+"/phpscripts/addUser.php", {
 							username: document.getElementById("user_reg_user").value,
-							password: data,
+							password: jsonHash['hash'],
 							email: document.getElementById("user_reg_email").value,
 							timezone: document.getElementById("user_reg_time").value
 						}).done(function(data){
@@ -389,7 +392,7 @@ function waitForUserFileGen(loc){
 
 	overText.innerHTML = "<span id='overlay_text'>Sorry, we've had some trouble making the configuration. Please copy and paste the data below into a file named 'props.php' located in the 'forum/config/' directory:</span>";
 
-	var configFile = "<div class='overlay_config' >\<?php<br />" +
+	var configFile = "<div class='overlay_config' >&lt?php <br />" +
 						"define(\"DATAHOST\", \""+document.getElementById("user_reg_db_host").value+"\");<br />" +
 						"define(\"DATAPORT\", \""+document.getElementById("user_reg_db_port").value+"\");<br />" +
 						"define(\"DATAUSER\", \""+document.getElementById("user_reg_db_user").value+"\");<br />" +
@@ -401,7 +404,7 @@ function waitForUserFileGen(loc){
 						"define(\"DOMAIN\", \""+document.getElementById("user_reg_domain").value+"\");</div>";
 
 	overText.innerHTML += configFile + "<span id='overlay_text' >Once this has been created, please click the button below.<br /><span id='overlay_failure'></span></span> "
-	overText.innerHTML += "<button onclick='checkPropsByUser("+loc+")' >Submit</button>";
+	overText.innerHTML += "<button onclick='checkPropsByUser(\""+loc+"\")' >Submit</button>";
 
 	overlay();
 
@@ -411,12 +414,11 @@ function checkPropsByUser(loc) {
 
 	$.post(loc+"/phpscripts/checkPropsFile.php").done(function(data){
 		if (data=="success") {
-			remOverlay();
 			fileGenSuccess(loc);
 		} else if (data=="file empty") {
 			document.getElementById("overlay_failure").innerHTML = "The config file was empty!";
 		} else if (data=="file not found") {
-			document.getElementById("File was not found!");
+			document.getElementById("overlay_failure").innerHTML = "The file was not found!";
 		}
 	});
 

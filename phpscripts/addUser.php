@@ -24,14 +24,16 @@ if (!isset($_POST['username']))
 
 require_once ("../function/database.php");
 
+$hashers = (array) json_decode($_POST['password']);
+
 try {
 
 	$database = new database(getcwd()."/..");
-	$database->insertNewUser($_POST['username'],$_POST['password'],
+	$database->insertNewUser($_POST['username'],$hashers['hash'],$hashers['time'],
 				$_POST['email'], $_POST['timezone'], isset($_POST['admin']) );
 
 	if ( isset($_POST['first_install']))
-		$database->insertNewUser("Anonymous","","",$_POST['timezone']);
+		$database->insertNewUser("Anonymous","",time(),"",$_POST['timezone']);
 
 	die("success");
 

@@ -119,6 +119,7 @@ class database {
 	 * @return PDOStatement : Return the rows that the statement gets
 	 *  that have been returned if it manages to find any... Might blow up
 	 * @throws PDOException : If SQL doth protest
+	 * @throws Exception if the statement itself is borked
 	 */
 	private function executeStatement( PDOStatement $statement ) {
 
@@ -132,6 +133,11 @@ class database {
 			error_log( "Failed to execute statement: " . $ex->getMessage() );
 			throw $ex;
 
+		} catch (Exception $exe) {
+			error_log( "Failed to execute statement: " . $exe->getMessage() );
+			error_log( "Error code: " . $statement->errorCode() );
+			error_log( "Statement was: " . $statement->queryString );
+			throw $exe;
 		}
 
 	}
@@ -147,6 +153,7 @@ class database {
 	 * @return PDOStatement : The result set that /should/ have been generated
 	 *  from the PDO execution
 	 * @throws PDOException : If PDO is a poor choice...
+	 * @throws Exception if the statement is borked
 	 */
 	private function executePreparedStatement( PDOStatement $statement, $arrayOfVars ) {
 
@@ -162,6 +169,10 @@ class database {
 
 			throw $ex;
 
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}
@@ -173,6 +184,7 @@ class database {
 	 * @param String $tableName : The name of the table we're checking off
 	 * @return bool : Of whether the table exists
 	 * @throws PDOException : If SQL likes to throw a mardy
+	 * @throws Exception if the statement is borked
 	 */
 	private function checkTableExists( $tableName ) {
 
@@ -188,6 +200,10 @@ class database {
 		} catch (PDOException $ex) {
 
 			throw $ex;
+
+		} catch (Exception $exe) {
+
+			throw $exe;
 
 		}
 
@@ -210,6 +226,10 @@ class database {
 
 			throw $ex;
 
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}
@@ -223,6 +243,10 @@ class database {
 		} catch (PDOException $ex) {
 
 			throw $ex;
+
+		} catch (Exception $exe) {
+
+			throw $exe;
 
 		}
 
@@ -242,6 +266,10 @@ class database {
 		} catch (PDOException $ex) {
 
 			throw $ex;
+
+		} catch (Exception $exe) {
+
+			throw $exe;
 
 		}
 
@@ -306,6 +334,10 @@ class database {
 
 			throw $ex;
 
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}
@@ -331,6 +363,10 @@ class database {
 
 			throw $ex;
 
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}
@@ -350,6 +386,10 @@ class database {
 		} catch (PDOException $ex) {
 
 			throw $ex;
+
+		} catch (Exception $exe) {
+
+			throw $exe;
 
 		}
 
@@ -373,6 +413,10 @@ class database {
 
 			throw $ex;
 
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}
@@ -394,6 +438,10 @@ class database {
 		} catch (PDOException $ex) {
 
 			throw $ex;
+
+		} catch (Exception $exe) {
+
+			throw $exe;
 
 		}
 
@@ -433,6 +481,10 @@ class database {
 
 			throw $ex;
 
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}
@@ -443,13 +495,15 @@ class database {
 	 *
 	 * @param String $username : The username of the person we're adding in
 	 * @param String $password : This has already been hashed... remember that
+	 * @param int $hashTime : This is the time the hash was created; the Exact time
 	 * @param String $email : The user's e-mail... to be checked via mail if set
 	 * @param int $timezone : The current timezone of the user
 	 * @param bool $admin_status : Whether the user is an administrator or not
 	 * @return bool
 	 * @throws PDOException : For if SQL doesn't like who we're adding
+	 * @throws Exception if the statement is borked
 	 */
-	public function insertNewUser( $username, $password, $email, $timezone, $admin_status=false ) {
+	public function insertNewUser( $username, $password, $hashTime, $email, $timezone, $admin_status=false ) {
 		if ($this->checkUsernameExists($username)) {
 
 			$arrayOfVars = array( ":username" => $username,
@@ -457,7 +511,7 @@ class database {
 									":userEmail" => $email,
 									":userPass" => $password,
 									":times1" => time(),
-									":times2" => time(),
+									":times2" => $hashTime,
 									":timezone" => $timezone) ;
 
 			$sql = "INSERT INTO `@users` (`username`,`username_cased`,`user_email`,`password`,
@@ -476,7 +530,7 @@ class database {
 				$arrayOfVars2 = array( ":userId" => $lastId );
 
 				$arrayOfVars3 = array( ":userId" => $lastId,
-										":joined_on" => time() );
+										":times" => time() );
 
 				$this->executePreparedStatement($this->makePreparedStatement($sql2),$arrayOfVars2);
 				$this->executePreparedStatement($this->makePreparedStatement($sql3),$arrayOfVars3);
@@ -486,6 +540,8 @@ class database {
 
 			} catch (PDOException $ex) {
 				throw $ex;
+			} catch (Exception $exe) {
+				throw $exe;
 			}
 		}
 	}
@@ -497,6 +553,7 @@ class database {
 	 * @param int $userId : The ID of the user that is being put into admin status
 	 * @throws PDOException : If SQL doesn't like to do something at the current
 	 *  hour in the day
+	 * @throws Exception if the statement is borked
 	 */
 	public function insertExistingAdmin( $userId ) {
 
@@ -516,6 +573,10 @@ class database {
 
 		} catch (PDOException $ex) {
 			throw $ex;
+		} catch (Exception $exe) {
+
+			throw $exe;
+
 		}
 
 	}

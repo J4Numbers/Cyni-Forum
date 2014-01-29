@@ -35,6 +35,11 @@ if (!isInstalled($home_dir)) {
 	$menu["Install/Repair"] = "install.php";
 	$body = "";
 
+} else if (!usersAdded($home_dir)){
+
+	$menu["Continue Installation"] = "user_info.php";
+	$body = "<div class='newsarticle_text'>You're nearly there! According to our systems, you've already installed the forums but you're not finished yet. Click on the tab above to finish your installation.</div>";
+
 } else {
 
 	$menu["Re-install"] = "reinstall.php";

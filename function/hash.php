@@ -37,18 +37,19 @@ function cyniHash( $pass, $d = false ) {
 
 	$input = unistr_to_ords( $pass );
 	$i = 0;
+	$final = array();
 
 	foreach ( $input as $started ) {
 		$move[$i] = (int) ord( $started );
 		$i++;
 	}
 
-	$start = (!$d) ? time() : $d;
+	$final['time'] = (!$d) ? time() : $d;
 	$c = 2;
 	$id = DATACONST;
 
 	for ( $l=1; $l<=64; $l++ ) {
-		$char = intval( ( ($start * (($id/10)*3))/ $move[$c] ) * ( $l * (($id/3)*4) ) );
+		$char = intval( ( ($final['time'] * (($id/10)*3))/ $move[$c] ) * ( $l * (($id/3)*4) ) );
 		$char = ( $char * ((5*19*3)/63)*4);
 		$newchar = $char % 127;
 		if ( $newchar < 0 ) {
@@ -58,14 +59,14 @@ function cyniHash( $pass, $d = false ) {
 			$newchar = $newchar + 33;
 		}
 		$shah[$l-1] = $newchar;
-		$c = ( ( $c * 2 ) / $l ) % strLen( $start );
+		$c = ( ( $c * 2 ) / $l ) % strLen( $final['time'] );
 		$hca = $shah[$l-1];
 		//echo $hca ." : ". chr( $hca ) . "<br />";
 	}
 
-	$final = ords_to_unistr( $shah );
+	$final['hash'] = ords_to_unistr( $shah );
 
-	return $final;
+	return json_encode( $final );
 }
 
 function ords_to_unistr($ords, $encoding = 'UTF-8'){

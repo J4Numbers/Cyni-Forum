@@ -26,6 +26,14 @@ function isInstalled( $home_dir ) {
 
 }
 
+function usersAdded( $home_dir ) {
+
+	$database = new database($home_dir);
+
+	return $database->getUsersInstalled();
+
+}
+
 function usersExist( $home_dir ) {
 
 	$database = new database($home_dir);
