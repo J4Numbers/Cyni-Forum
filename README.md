@@ -8,8 +8,8 @@ soon change and there will be a working forum to play with.
 Stretch Goals
 --------------------------
 
- - Installation (Current Stage)
- - User Registration and Customisation
+ - Installation
+ - User Registration and Customisation (Current Stage)
  - Forum Retrieval and Viewing
  - Administrator Configuration
  - Forum Posting and Editing
