@@ -258,12 +258,9 @@ function submitNewUserData(loc){
 
 						console.log( "Hashed: " + data );
 
-						var jsonHash = JSON.parse(data);
-						console.log(jsonHash);
-
 						$.post(loc+"/phpscripts/addUser.php", {
 							username: document.getElementById("user_reg_user").value,
-							password: jsonHash['hash'],
+							password: data,
 							email: document.getElementById("user_reg_email").value,
 							timezone: document.getElementById("user_reg_time").value
 						}).done(function(data){
