@@ -98,9 +98,9 @@ function attemptLogin( $username, $password, $home_dir ) {
 
 	require_once "$home_dir/function/hash.php";
 
-	$hash = cyniHash($password, $time);
+	$hash = (array) json_decode(cyniHash($password, $time));
 
-	if ( compareHashedPasswordWithUsername($username, $hash, $home_dir) ) {
+	if ( compareHashedPasswordWithUsername($username, $hash['hash'], $home_dir) ) {
 
 		createLoginSession( $username, $home_dir );
 		header( "Location: index.php" );
