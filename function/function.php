@@ -140,7 +140,7 @@ function getLoginStatus($home_dir) {
 						<input type='submit' name='Submit' /></td></tr></table></form>",INSTLOC,INSTLOC);
 	} else {
 		$user = fetchSession($home_dir);
-		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user[1]['username']);
+		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user[2]['username']);
 	}
 
 	return $ret;
