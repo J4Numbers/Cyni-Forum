@@ -476,6 +476,7 @@ class database {
 
 		$userArray = array();
 
+		//TODO: Add rank info into this array
 		array_push($userArray, $this->getJoinedGroups($userId));
 		array_push($userArray, $this->getUserFromUserId($userId));
 		array_push($userArray, $this->getUserMetaFromId($userId));

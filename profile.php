@@ -34,4 +34,37 @@ if (isset($_GET['id']))
 else
 	$viewing = getUserFromName($_GET['username'],$home_dir);
 
+$pg = new pageTemplate("profile.htm",$home_dir);
+
+$pg->setTag("LOCATION", ".");
+$pg->setTag("TITLE", $viewing[1]['username']."'s Profile");
+$pg->setTag("HEAD", "<img src='./images/forum_logo.png' class='logo' />");
+
+$primGroup = extractGroupFromArrayWithId($viewing[0],$viewing[1]['primary_group_id']);
+$userCol = ($viewing[1]['user_color'] != null) ? $viewing[1]['user_color'] :
+	$primGroup['group_color'];
+$userAvat = ($viewing[1]['user_avatar'] != null) ? $viewing[1]['user_avatar'] :
+	"default.png";
+
+$auxGr = "";
+
+foreach ($viewing[0] as $group)
+	$auxGr .= sprintf("<tr><td style='color:%s;'>%s</td></tr>",$group['group_color'],$group['group_name']);
+
+$pg->setTag("AVATAR", "<img class='user_avatar' src='./images/avatars/$userAvat' />");
+$pg->setTag("USERNAME", $viewing[1]['username']);
+$pg->setTag("USERCOLOR", $userCol);
+$pg->setTag("RANKCOLOR", "");
+$pg->setTag("USERRANK", "");
+$pg->setTag("PRGROUPCOLOR", $primGroup['group_color']);
+$pg->setTag("PRGROUP", $primGroup['group_name']);
+$pg->setTag("REGDATE", date("Y-m-d", $viewing[1]['time_reg']));
+$pg->setTag("USERBIO", $viewing[2]['user_bio']);
+$pg->setTag("AUXGROUPS", "<table>%$auxGr</table>");
+$pg->setTag("USERSIG", $viewing[2]['user_sig']);
+
+$pg->setTag("FOOT", "");
+
 var_dump($viewing);
+
+$pg->showPage();

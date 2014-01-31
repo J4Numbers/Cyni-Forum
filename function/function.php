@@ -71,6 +71,25 @@ function getUserFromName( $username, $home_dir ) {
 
 }
 
+function extractGroupFromArrayWithId( $groupArray, $specGroup ) {
+
+	foreach ($groupArray as $group)
+		if ($group['group_id']==$specGroup)
+			return $group;
+
+	return false;
+
+}
+function extractGroupFromArrayWithName( $groupArray, $specGroup ) {
+
+	foreach ($groupArray as $group)
+		if ($group['group_name']==$specGroup)
+			return $group;
+
+	return false;
+
+}
+
 function checkSessionStarted() {
 	if (session_status() == PHP_SESSION_NONE)
 		session_start();
