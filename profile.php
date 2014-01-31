@@ -16,22 +16,22 @@
  * limitations under the License.
  */
 
-if (!file_exists("../config/props.php"))
-	die("No file found");
+if (!isset($_GET['id']) && !isset($_GET['username']))
+	header("Location: ./index.php");
 
-if (!isset($_POST['username']))
-	die("No value found");
+$home_dir = getcwd();
 
-require_once ("../function/database.php");
+require_once "$home_dir/function/function.php";
+require_once "$home_dir/function/page_generation.php";
 
-$database = new database(getcwd()."/..");
+if ( !((isset($_GET['id']) && checkUserExists($_GET['id'],false,$home_dir)) ||
+		(isset($_GET['username']) && checkUserExists(false,$_GET['username'],$home_dir))) )
+	//TODO: Make a userfail page
+	header("Location: ./index.php");
 
-try {
+if (isset($_GET['id']))
+	$viewing = getUserFromId($_GET['id'],$home_dir);
+else
+	$viewing = getUserFromName($_GET['username'],$home_dir);
 
-	die( $database->checkUsernameExists($_POST['username'])?"false":"true" );
-
-} catch (PDOException $ex) {
-
-	die("sql error");
-
-}
+var_dump($viewing);

@@ -211,7 +211,7 @@ class database {
 
 	public function checkUsernameExists( $username ) {
 
-		$arrayOfVars = array( ":user" => $username );
+		$arrayOfVars = array( ":user" => strtolower($username) );
 
 		$sql = "SELECT count(*) AS `total` FROM `@users` WHERE (`username`=:user)";
 
@@ -220,7 +220,32 @@ class database {
 			$result = $this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
 			$row = $result->fetch();
 
-			return ( $row['total'] == 0 );
+			return ( $row['total'] > 0 );
+
+		} catch (PDOException $ex) {
+
+			throw $ex;
+
+		} catch (Exception $exe) {
+
+			throw $exe;
+
+		}
+
+	}
+
+	public function checkUserIdExists($userId) {
+
+		$arrayOfVars = array(":userId" => $userId);
+
+		$sql = "SELECT COUNT(*) AS `total` FROM `@users` WHERE (`user_id`=:userId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql), $arrayOfVars);
+			$row = $result->fetch();
+
+			return ( $row['total'] > 0 );
 
 		} catch (PDOException $ex) {
 
@@ -447,9 +472,7 @@ class database {
 
 	}
 
-	public function getCompleteUserInfoFromUsername( $username ) {
-
-		$userId = $this->getUserIdFromUserName($username);
+	public function getCompleteUserInfoFromId($userId) {
 
 		$userArray = array();
 
@@ -458,6 +481,14 @@ class database {
 		array_push($userArray, $this->getUserMetaFromId($userId));
 
 		return $userArray;
+
+	}
+
+	public function getCompleteUserInfoFromUsername( $username ) {
+
+		$userId = $this->getUserIdFromUserName($username);
+
+		return $this->getCompleteUserInfoFromId($userId);
 
 	}
 

@@ -41,6 +41,36 @@ function usersExist( $home_dir ) {
 	return ( file_exists("$home_dir/config/props.php") && $database->getUsersInstalled() );
 }
 
+function checkUserExists( $userId=false, $username=false, $home_dir ) {
+
+	$database = new database($home_dir);
+
+	if ($userId != false)
+		return $database->checkUserIdExists($userId);
+
+	if ($username != false)
+		return $database->checkUsernameExists($username);
+
+	return false;
+
+}
+
+function getUserFromId( $userId, $home_dir ) {
+
+	$database = new database($home_dir);
+
+	return $database->getCompleteUserInfoFromId($userId);
+
+}
+
+function getUserFromName( $username, $home_dir ) {
+
+	$database = new database($home_dir);
+
+	return $database->getCompleteUserInfoFromUsername($username);
+
+}
+
 function checkSessionStarted() {
 	if (session_status() == PHP_SESSION_NONE)
 		session_start();
