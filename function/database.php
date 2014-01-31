@@ -45,6 +45,8 @@ class database {
 		try {
 
 			$pdo_base = new PDO( $dsn, DATAUSER, DATAPASS );
+			$pdo_base->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
 			$this->pdo_base = $pdo_base;
 			$this->prefix = DATAPFIX;
 
@@ -97,8 +99,11 @@ class database {
 
 		try {
 
-			foreach ( $arrayOfVars as $key => &$val )
+			foreach ( $arrayOfVars as $key => &$val ) {
+				error_log( sprintf("[KEY::%s]",$key) );
+				error_log( sprintf("[VAL::%s]",$val) );
 				$statement->bindParam( $key, $val );
+			}
 
 			return $statement;
 
@@ -400,7 +405,7 @@ class database {
 
 		$arrayOfVars = array( ":userId" => $userId );
 
-		$sql = "SELECT `u_groups`.`group_id`,`group_name`,`group_color`,`group_info`,`joined_on`,`status_id` FROM `@user_groups` AS `u_groups` INNER JOIN `@groups` AS `groups` ON `u_groups`.`group_id`=`groups`.`group_id` WHERE (`u_groups`.`user_id`=:userId)";
+		$sql = "SELECT `group_id` FROM `@user_groups` WHERE (`user_id`=:userId)";
 
 		try {
 
@@ -420,6 +425,64 @@ class database {
 
 	}
 
+	public function getInfoAboutJoinedGroupWithIds( $groupId, $userId ) {
+
+		$arrayOfVars = array( ":groupId" => $groupId,
+								":userId" => $userId );
+
+		$sql = "SELECT `u_groups`.`group_id`,`group_name`,`group_color`,`group_info`,`joined_on`,`status_id` FROM `@user_groups` AS `u_groups` INNER JOIN `@groups` AS `groups` ON `u_groups`.`group_id`=`groups`.`group_id` WHERE (`u_groups`.`user_id`=:userId AND `u_groups`.`group_id`=:groupId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+			return $result->fetch();
+
+		} catch (PDOException $ex) {
+			throw $ex;
+		} catch (Exception $exe) {
+			throw $exe;
+		}
+
+	}
+
+	public function getRankFromRankId( $rankId ) {
+
+		$arrayOfVars = array( ":rankId" => $rankId );
+
+		$sql = "SELECT * FROM `@ranks` WHERE (`rank_id`=:rankId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+			return $result->fetch();
+
+		} catch (PDOException $ex) {
+			throw $ex;
+		} catch (Exception $exe) {
+			throw $exe;
+		}
+
+	}
+
+	public function getGroupFromGroupId( $groupId ) {
+
+		$arrayOfVars = array( ":groupId" => $groupId );
+
+		$sql = "SELECT * FROM `@groups` WHERE (`group_id`=:groupId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+			return $result->fetch();
+
+		} catch (PDOException $ex) {
+			throw $ex;
+		} catch (Exception $exe) {
+			throw $exe;
+		}
+
+	}
+
 	public function getUserFromUserId( $userId ) {
 
 		$arrayOfVars = array( ":userId" => $userId );
@@ -432,7 +495,7 @@ class database {
 
 			if ($result->rowCount() < 1) return false;
 
-			return $result->fetch(PDO::FETCH_ASSOC);
+			return $result->fetch();
 
 		} catch (PDOException $ex) {
 
@@ -458,7 +521,7 @@ class database {
 
 			if ( $result->rowCount() < 1 ) return false;
 
-			return $result->fetch(PDO::FETCH_ASSOC);
+			return $result->fetch();
 
 		} catch (PDOException $ex) {
 
@@ -476,8 +539,8 @@ class database {
 
 		$userArray = array();
 
-		//TODO: Add rank info into this array
 		array_push($userArray, $this->getJoinedGroups($userId));
+		array_push($userArray, $this->getRankFromRankId($this->getRankFromUserWithId($userId)));
 		array_push($userArray, $this->getUserFromUserId($userId));
 		array_push($userArray, $this->getUserMetaFromId($userId));
 
@@ -490,6 +553,27 @@ class database {
 		$userId = $this->getUserIdFromUserName($username);
 
 		return $this->getCompleteUserInfoFromId($userId);
+
+	}
+
+	public function getRankFromUserWithId($userId) {
+
+		$arrayOfVars = array( ":userId" => $userId );
+
+		$sql = "SELECT `rank_id` FROM `@users` WHERE (`user_id`=:userId)";
+
+		try {
+
+			$result = $this->executePreparedStatement($this->makePreparedStatement($sql),$arrayOfVars);
+			$row = $result->fetch();
+
+			return $row['rank_id'];
+
+		} catch (PDOException $ex) {
+			throw $ex;
+		} catch (Exception $exe) {
+			throw $exe;
+		}
 
 	}
 

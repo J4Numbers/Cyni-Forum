@@ -37,34 +37,33 @@ else
 $pg = new pageTemplate("profile.htm",$home_dir);
 
 $pg->setTag("LOCATION", ".");
-$pg->setTag("TITLE", $viewing[1]['username']."'s Profile");
+$pg->setTag("TITLE", $viewing->getUsername()."'s Profile");
 $pg->setTag("HEAD", "<img src='./images/forum_logo.png' class='logo' />");
+$pg->setTag("LOGINBOX", getLoginStatus($home_dir));
 
-$primGroup = extractGroupFromArrayWithId($viewing[0],$viewing[1]['primary_group_id']);
-$userCol = ($viewing[1]['user_color'] != null) ? $viewing[1]['user_color'] :
-	$primGroup['group_color'];
-$userAvat = ($viewing[1]['user_avatar'] != null) ? $viewing[1]['user_avatar'] :
+$userCol = ($viewing->getCurrentColor() != null) ? $viewing->getCurrentColor() :
+	$viewing->getPrimaryGroup()->getColor();
+
+$userAvat = ($viewing->getAvatar() != null) ? $viewing->getAvatar() :
 	"default.png";
 
 $auxGr = "";
 
-foreach ($viewing[0] as $group)
-	$auxGr .= sprintf("<tr><td style='color:%s;'>%s</td></tr>",$group['group_color'],$group['group_name']);
+foreach ($viewing->getAuxGroups() as $group)
+	$auxGr .= sprintf("<tr><td style='color:%s;'>%s</td></tr>",$group->getColor(),$group->getName());
 
 $pg->setTag("AVATAR", "<img class='user_avatar' src='./images/avatars/$userAvat' />");
-$pg->setTag("USERNAME", $viewing[1]['username']);
+$pg->setTag("USERNAME", $viewing->getUsername());
 $pg->setTag("USERCOLOR", $userCol);
 $pg->setTag("RANKCOLOR", "");
 $pg->setTag("USERRANK", "");
-$pg->setTag("PRGROUPCOLOR", $primGroup['group_color']);
-$pg->setTag("PRGROUP", $primGroup['group_name']);
-$pg->setTag("REGDATE", date("Y-m-d", $viewing[1]['time_reg']));
-$pg->setTag("USERBIO", $viewing[2]['user_bio']);
-$pg->setTag("AUXGROUPS", "<table>%$auxGr</table>");
-$pg->setTag("USERSIG", $viewing[2]['user_sig']);
+$pg->setTag("PRGROUPCOLOR", $viewing->getPrimaryGroup()->getColor());
+$pg->setTag("PRGROUP", $viewing->getPrimaryGroup()->getName());
+$pg->setTag("REGDATE", date("Y-m-d", $viewing->getTimeRegistered()));
+$pg->setTag("USERBIO", $viewing->getBiography());
+$pg->setTag("AUXGROUPS", "<table>$auxGr</table>");
+$pg->setTag("USERSIG", $viewing->getSignature());
 
 $pg->setTag("FOOT", "");
-
-var_dump($viewing);
 
 $pg->showPage();

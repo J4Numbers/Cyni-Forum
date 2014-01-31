@@ -17,6 +17,7 @@
  */
 
 require_once "$home_dir/function/database.php";
+require_once "$home_dir/classes/user.php";
 
 function isInstalled( $home_dir ) {
 
@@ -55,19 +56,27 @@ function checkUserExists( $userId=false, $username=false, $home_dir ) {
 
 }
 
+/**
+ * @param $userId
+ * @param $home_dir
+ * @return user
+ */
 function getUserFromId( $userId, $home_dir ) {
 
-	$database = new database($home_dir);
-
-	return $database->getCompleteUserInfoFromId($userId);
+	return new user($userId, $home_dir);
 
 }
 
+/**
+ * @param $username
+ * @param $home_dir
+ * @return user
+ */
 function getUserFromName( $username, $home_dir ) {
 
 	$database = new database($home_dir);
 
-	return $database->getCompleteUserInfoFromUsername($username);
+	return getUserFromId( $database->getUserIdFromUserName($username), $home_dir );
 
 }
 
@@ -75,15 +84,6 @@ function extractGroupFromArrayWithId( $groupArray, $specGroup ) {
 
 	foreach ($groupArray as $group)
 		if ($group['group_id']==$specGroup)
-			return $group;
-
-	return false;
-
-}
-function extractGroupFromArrayWithName( $groupArray, $specGroup ) {
-
-	foreach ($groupArray as $group)
-		if ($group['group_name']==$specGroup)
 			return $group;
 
 	return false;
