@@ -50,6 +50,9 @@ $userAvat = ($viewing->getAvatar() != null) ? $viewing->getAvatar() :
 $auxGr = "";
 
 foreach ($viewing->getAuxGroups() as $group)
+	/**
+	 * @var group $group
+	 */
 	$auxGr .= sprintf("<tr><td style='color:%s;'>%s</td></tr>",$group->getColor(),$group->getName());
 
 $pg->setTag("AVATAR", "<img class='user_avatar' src='./images/avatars/$userAvat' />");
