@@ -31,8 +31,14 @@ body {
 	left: calc(100% - 300px);
 }
 
+.login_box{
+	margin: 0;
+	width: 250px;
+}
+
 .login_table{
 	font: 12px 'Titillium Web', sans-serif;
+	position: inherit;
 }
 
 .log_input{

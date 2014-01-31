@@ -28,7 +28,7 @@ $pg = new pageTemplate("rooting.htm", $home_dir);
 
 $pg->setTag("LOCATION", ".");
 $pg->setTag("TITLE", "Forums");
-$pg->SetTag("HEAD","");
+$pg->SetTag("HEAD","<img src='./images/forum_logo.png' class='logo' />");
 $pg->setTag("LOGINBOX", getLoginStatus($home_dir));
 $pg->setTag("FOOT","");
 

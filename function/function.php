@@ -57,6 +57,14 @@ function createLoginSession( $username, $home_dir ) {
 
 }
 
+/**
+ * This function also acts as a means to an end in order to get
+ * the login status of the user.
+ *
+ * @param String $home_dir The path to the installation directory
+ * @return bool|array : False if not logged in and the details of
+ *  the user if they actually are logged in
+ */
 function fetchSession($home_dir) {
 
 	require_once "$home_dir/config/props.php";

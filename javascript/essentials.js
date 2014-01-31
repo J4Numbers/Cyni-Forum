@@ -120,16 +120,6 @@ function checkUniqueUsername( username, loc, callback ) {
 
 }
 
-function login() {
-
-	//user_log_user
-	//user_log_pass
-
-	var username = document.getElementById("user_log_user").value;
-	var password = document.getElementById("user_log_pass").value;
-
-}
-
 function userFilledIn(loc, callback) {
 
 	callback(false);
