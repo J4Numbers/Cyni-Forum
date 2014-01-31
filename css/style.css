@@ -104,6 +104,41 @@ img.logo {
 	margin-top: 10px;
 }
 
+table.user_profile {
+	width: 800px;
+	margin: 0 auto;
+}
+
+.user_words{
+	width: 200px;
+	border: 2px #1F1F1F;
+}
+
+.user_avat{
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+}
+
+.user_name{
+	text-align: center;
+	font: 19px bold;
+}
+
+.user_rank{
+	text-align: center;
+	opacity: 0.85;
+}
+
+.user_prim_gr{
+	text-align: center;
+}
+
+.user_reg_date{
+	color: rgba(42,42,42,0.85);
+	text-align: center;
+}
+
 .news_avatar {
 	float:left;
 	position: relative;

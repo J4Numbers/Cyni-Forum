@@ -41,8 +41,8 @@ $pg->setTag("TITLE", $viewing->getUsername()."'s Profile");
 $pg->setTag("HEAD", "<img src='./images/forum_logo.png' class='logo' />");
 $pg->setTag("LOGINBOX", getLoginStatus($home_dir));
 
-$userCol = ($viewing->getCurrentColor() != null) ? $viewing->getCurrentColor() :
-	$viewing->getPrimaryGroup()->getColor();
+$userCol = ($viewing->getCurrentColor() != null) ? "#".$viewing->getCurrentColor() :
+	"#".$viewing->getPrimaryGroup()->getColor();
 
 $userAvat = ($viewing->getAvatar() != null) ? $viewing->getAvatar() :
 	"default.png";
@@ -53,14 +53,14 @@ foreach ($viewing->getAuxGroups() as $group)
 	/**
 	 * @var group $group
 	 */
-	$auxGr .= sprintf("<tr><td style='color:%s;'>%s</td></tr>",$group->getColor(),$group->getName());
+	$auxGr .= sprintf("<tr><td style='color:#%s;'>%s</td></tr>",$group->getColor(),$group->getName());
 
 $pg->setTag("AVATAR", "<img class='user_avatar' src='./images/avatars/$userAvat' />");
 $pg->setTag("USERNAME", $viewing->getUsername());
 $pg->setTag("USERCOLOR", $userCol);
 $pg->setTag("RANKCOLOR", "");
 $pg->setTag("USERRANK", "");
-$pg->setTag("PRGROUPCOLOR", $viewing->getPrimaryGroup()->getColor());
+$pg->setTag("PRGROUPCOLOR", "#".$viewing->getPrimaryGroup()->getColor());
 $pg->setTag("PRGROUP", $viewing->getPrimaryGroup()->getName());
 $pg->setTag("REGDATE", date("Y-m-d", $viewing->getTimeRegistered()));
 $pg->setTag("USERBIO", $viewing->getBiography());

@@ -22,25 +22,59 @@
 	<div class="main">
 		<table class="user_profile">
 			<tr>
-				<td rowspan="2" class="user_words">
+				<td rowspan="2" class="user_words newsarticle">
 					<div class="user_avat" >[[AVATAR]]</div>
 					<div class="user_name" style="color:[[USERCOLOR]];">[[USERNAME]]</div>
 					<div class="user_rank" style="color:[[RANKCOLOR]];">[[USERRANK]]</div>
 					<div class="user_prim_gr" style="color:[[PRGROUPCOLOR]];">[[PRGROUP]]</div>
-					<div class="user_reg_date" >[[REGDATE]]</div>
+					<div class="user_reg_date" >Joined On: [[REGDATE]]</div>
 				</td>
 				<td>
-					[[USERBIO]]
+					<table class="newsarticle" >
+						<tr>
+							<td class="newsarticle_header">
+								<h1>Biography</h1>
+							</td>
+						</tr>
+						<tr>
+							<td class="newsarcicle_text">
+								[[USERBIO]]
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					[[AUXGROUPS]]
+					<table class="newsarticle" >
+						<tr>
+							<td class="newsarticle_header">
+								<h1>Joined Groups</h1>
+							</td>
+						</tr>
+						<tr>
+							<td class="newsarticle_text">
+								[[AUXGROUPS]]
+							</td>
+						</tr>
+					</table>
+
 				</td>
 			</tr>
 			<tr>
-				<td>
-					[[USERSIG]]
+				<td colspan="2" >
+					<table class="newsarticle" >
+						<tr>
+							<td class="newsarticle_header">
+								<h1>Signature</h1>
+							</td>
+						</tr>
+						<tr>
+							<td class="newsarticle_text">
+								[[USERSIG]]
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
