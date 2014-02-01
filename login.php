@@ -27,11 +27,11 @@ if ( isset($_POST['log_user']) && isset($_POST['log_pass']) )
 
 $pg = new pageTemplate( "logging.htm", $home_dir );
 
-$body = sprintf("<div class='newsarticle_text'><div class='login_box' >%s</div></div>", getLoginStatus($home_dir));
+$body = sprintf("<div class='newsarticle_text' ><div class='login_box' >%s</div></div>", getLoginStatus($home_dir));
 
 $pg->setTag( "LOCATION", "." );
 $pg->setTag( "TITLE", "Log In" );
-$pg->setTag( "BODY", "<div class='newsarticle'>$body</div>" );
+$pg->setTag( "BODY", "<div class='newsarticle' style='width:300px;'>$body</div>" );
 $pg->setTag( "HEAD", "<img src='./images/forum_logo.png' class='logo' />" );
 $pg->setTag( "FOOT", "" );
 

@@ -548,6 +548,17 @@ class database {
 
 	}
 
+	public function getUserInfoFromId($userId) {
+
+		$userArray = array();
+
+		array_push($userArray, $this->getUserFromUserId($userId));
+		array_push($userArray, $this->getRankFromUserWithId($userId));
+		array_push($userArray, $this->getUserMetaFromId($userId));
+
+		return $userArray;
+	}
+
 	public function getCompleteUserInfoFromUsername( $username ) {
 
 		$userId = $this->getUserIdFromUserName($username);

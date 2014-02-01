@@ -16,5 +16,8 @@
  * limitations under the License.
  */
 
-session_start();
-session_destroy();
+$home_dir = getcwd();
+
+require_once "./function/function.php";
+
+endUserSession($home_dir);
