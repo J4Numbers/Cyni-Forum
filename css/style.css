@@ -18,6 +18,9 @@ body {
 
 .menu{
 
+	top: 0;
+	vertical-align: top;
+
 }
 
 .login{
@@ -28,7 +31,11 @@ body {
 	border-radius: 5px;
 	width: 210px;
 	height: 100px;
-	left: calc(100% - 300px);
+}
+
+textarea {
+	width: 98%;
+	resize: vertical;
 }
 
 .login_box{
@@ -55,6 +62,10 @@ body {
 	height: 120px;
 }
 
+.header_logo {
+	width: 100px;
+}
+
 img.logo {
 	position: relative;
 	float: left;
@@ -66,7 +77,6 @@ img.logo {
 	background-color: rgb(100,100,100);
 	padding: 10px;
 	margin-left: 10px;
-	padding-top: 2px;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 	min-width: auto;
@@ -192,7 +202,7 @@ table.user_profile {
 }
 
 .heading{
-	width: 60%;
+	width: 100%;
 }
 
 .table_of_things {

@@ -24,15 +24,18 @@ $home_dir = getcwd();
 require_once "$home_dir/function/function.php";
 require_once "$home_dir/function/page_generation.php";
 
+$user = getUserFromSession($home_dir);
+
 if ( !((isset($_GET['id']) && checkUserExists($_GET['id'],false,$home_dir)) ||
 		(isset($_GET['username']) && checkUserExists(false,$_GET['username'],$home_dir))) )
 	//TODO: Make a userfail page
 	header("Location: ./index.php");
 
-if (isset($_GET['id']))
-	$viewing = getUserFromId($_GET['id'],$home_dir);
-else
-	$viewing = getUserFromName($_GET['username'],$home_dir);
+$id = (isset($_GET['username'])) ?
+	getUserIdFromUsername($_GET['username'],$home_dir) :
+	$_GET['id'];
+
+$viewing = getUserFromId($id,$home_dir);
 
 $pg = new pageTemplate("profile.htm",$home_dir);
 
@@ -41,17 +44,28 @@ $pg->setTag("TITLE", $viewing->getUsername()."'s Profile");
 $pg->setTag("HEAD", "<img src='./images/forum_logo.png' class='logo' />");
 $pg->setTag("LOGINBOX", getLoginStatus($home_dir));
 
+$menu = array();
+$menu['Index'] = "index.php";
+$menu['FAQ'] = "frequently_asked_questions.php";
+
+if ( fetchSession($home_dir) != false ) {
+	$menu['My Profile'] = "profile.php?id=".$user->getId();
+	$menu['Edit Profile'] = "edit_my_profile.php";
+	$menu['Log Out'] = "logout.php";
+}
+
+foreach ( $menu as $name => $link )
+	$pg->appendTag("MENU",
+		"<a href='./$link' class='menuItem menuLink' >$name</a>");
+
 $userCol = ($viewing->getCurrentColor() != null) ? "#".$viewing->getCurrentColor() :
 	"#".$viewing->getPrimaryGroup()->getColor();
-
-$userAvat = ($viewing->getAvatar() != null) ? $viewing->getAvatar() :
-	"default.png";
 
 $auxGr = "";
 
 foreach ($viewing->getAuxGroups() as $group)
 	/**
-	 * @var group $group
+	 * @var group $group The singular group entity that we have right here
 	 */
 	$auxGr .= sprintf("<tr><td style='color:#%s;'>%s</td></tr>",$group->getColor(),$group->getName());
 

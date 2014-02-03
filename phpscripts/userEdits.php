@@ -16,10 +16,15 @@
  * limitations under the License.
  */
 
-$home_dir = getcwd();
+echo "Post:";
+var_dump($_POST);
+echo "<br/><br/>Files:";
+var_dump($_FILES);
+echo "<br/><br/>File Contents:";
+$data = file_get_contents($_FILES['user_edit_avat']['tmp_name']);
 
-require_once "./function/function.php";
+var_dump($data);
+echo "<br/><br/>Endoding:";
+$data = base64_encode($data);
 
-endUserSession($home_dir);
-
-header("Location: ./index.php");
+var_dump($data);

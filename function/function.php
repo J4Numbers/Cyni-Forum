@@ -97,6 +97,14 @@ function checkUserExists( $userId=false, $username=false, $home_dir ) {
 
 }
 
+function getUserIdFromUsername($username, $home_dir) {
+
+	$database = new database($home_dir);
+
+	return $database->getUserIdFromUserName($username);
+
+}
+
 /**
  * Return the object that represents the user to the
  * person that is asking. We shall take the ID and a
@@ -221,6 +229,9 @@ function fetchSession($home_dir) {
 
 function getUserIdFromSession( $home_dir ) {
 
+	if (!fetchSession($home_dir))
+		return false;
+
 	$ret = (array) loadSession($home_dir);
 	return $ret["user_id"];
 
@@ -264,8 +275,8 @@ function getLoginStatus($home_dir) {
 					<tr><td colspan='2' >New? Why not <a href='%s/registration.php'>Register</a>?
 						<input type='submit' name='Submit' /></td></tr></table></form>",INSTLOC,INSTLOC);
 	} else {
-		$user = fetchSession($home_dir);
-		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user[2]['username']);
+		$user = getUserFromSession($home_dir);
+		$ret = sprintf("<table><tr>Welcome %s</tr></table>", $user->getUsername());
 	}
 
 	return $ret;

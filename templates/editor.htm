@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>[[TITLE]]</title>
+	<link rel="stylesheet" href="[[LOCATION]]/css/style.css" />
+	<script src="[[LOCATION]]/javascript/jquery.min.js"></script>
+	<script src="[[LOCATION]]/javascript/essentials.js" ></script>
+</head>
+<body>
+<div class="header">
+	<table class="heading" >
+		<tr>
+			<td class="header_logo" >
+				<a href="[[LOCATION]]/index.php" >[[HEAD]]</a>
+			</td>
+			<td class="menu" >
+				[[MENU]]
+			</td>
+			<td class="login" >
+				[[LOGINBOX]]
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="column">
+	<div class="main">
+		<form method="post" action="[[LOCATION]]/phpscripts/userEdits.php" enctype='multipart/form-data' >
+			<input type="hidden" id="user_edit_id" name="user_edit_id" value="[[USERID]]" />
+			<table class="user_profile">
+				<tr>
+					<td rowspan="2" class="user_words newsarticle">
+						<div class="user_avat" >
+							<img class="user_avatar" src="[[LOCATION]]/images/avatars/[[AVATAR]]" />
+							<input type="file" accept="image/*" id="user_edit_avat"
+									name="user_edit_avat" value="[[AVATAR]]" />
+						</div>
+						<div class="user_name" style="color:[[USERCOLOR]];">[[USERNAME]]</div>
+						<div class="user_rank" style="color:[[RANKCOLOR]];">[[USERRANK]]</div>
+						<div class="user_prim_gr" style="color:[[PRGROUPCOLOR]];">[[PRGROUP]]</div>
+						<div class="user_reg_date" >Joined On: [[REGDATE]]</div>
+						<div class="buttons"><input type="submit" onsubmit="submitUserEditData('.');" /></div>
+					</td>
+					<td>
+						<table class="newsarticle" >
+							<tr>
+								<td class="newsarticle_header">
+									<h1>Biography</h1>
+								</td>
+							</tr>
+							<tr>
+								<td class="newsarcicle_text">
+									<textarea id="user_edit_bio" name="user_edit_bio" >[[USERBIO]]</textarea>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table class="newsarticle" >
+							<tr>
+								<td class="newsarticle_header">
+									<h1>Joined Groups</h1>
+								</td>
+							</tr>
+							<tr>
+								<td class="newsarticle_text">
+									[[AUXGROUPS]]
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" >
+						<table class="newsarticle" >
+							<tr>
+								<td class="newsarticle_header">
+									<h1>Signature</h1>
+								</td>
+							</tr>
+							<tr>
+								<td class="newsarticle_text">
+									<textarea id="user_edit_sig" name="user_edit_sig" >[[USERSIG]]</textarea>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<div class="footer">
+	[[FOOT]]
+</div>
+<div id="overlay" >
+	<div id="overlay_contents" ></div>
+</div>
+</body>
+
+</html>

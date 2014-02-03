@@ -283,6 +283,21 @@ function submitNewUserData(loc){
 
 }
 
+function submitUserEditData(loc){
+
+	$.post(loc+"/phpscripts/userEdits.php",
+		{
+			id: document.getElementById("user_edit_id").value,
+			bio: document.getElementById("user_edit_bio").value,
+			sig: document.getElementById("user_edit_sig").value,
+			avat: document.getElementById("user_edit_avat")
+		}
+	).done(function(data){
+		console.log(data);
+	});
+
+}
+
 function submitAdminData(loc){
 
 	userFilledIn(loc,function(data){

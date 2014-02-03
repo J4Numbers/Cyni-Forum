@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 
+CREATE TABLE `@images` (
+  `image_id` integer(11) not null auto_increment,
+  `image_type` varchar(25) not null default '',
+  `image` blob not null,
+  `image_size` varchar(25) not null default '',
+  `image_ctgy` varchar(25) not null default '',
+  `image_name` varchar(50) not null default '',
+  primary key (`image_id`)
+);
+
+-- TODO: Make a default user image --
+INSERT INTO `@images` (`image_type`,`image`,`image_size`,`image_ctgy`,`image_name`) VALUES
+  ();
+
 CREATE TABLE `@groups`(
   `group_id` integer(11) not null auto_increment,
   `group_name` varchar(64) not null,
@@ -153,10 +167,11 @@ CREATE TABLE `@users`(
   `time_pass_altered` integer(11) not null,
   `user_timezone` decimal(5,2) not null,
   `user_color` varchar(6),
-  `user_avatar` varchar(255),
+  `user_avatar` integer(11) default '1',
   primary key(`user_id`),
   foreign key(`primary_group_id`) references `@groups`(`group_id`),
-  foreign key(`rank_id`) references `@ranks`(`rank_id`)
+  foreign key(`rank_id`) references `@ranks`(`rank_id`),
+  foreign key(`user_avatar`) references `@images`(`image_id`)
 );
 
 CREATE TABLE `@user_meta`(
